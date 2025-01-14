@@ -17,18 +17,24 @@ const routes: Routes = [
   {
     path: 'settings',
     loadChildren: () =>
-      import('./pages/config/config.module').then(m => m.ConfigPageModule),
+      import('./pages/config/config.module').then((m) => m.ConfigPageModule),
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'lottery',
+    loadChildren: () =>
+      import('./pages/lottery/lottery.module').then((m) => m.LotteryModule),
     canActivate: [AuthGuard],
   },
   {
     path: '',
     redirectTo: 'login',
     pathMatch: 'full',
-  }
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules })],
   exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

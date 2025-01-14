@@ -1,0 +1,29 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>{{ mode === 'view' ? 'Ver Lotería' : 'Editar Lotería' }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form *ngIf="mode === 'edit'">
+    <ion-item>
+      <ion-label>Nombre</ion-label>
+      <ion-input [(ngModel)]="lotteryData.name" required></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>Tipo</ion-label>
+      <ion-select [(ngModel)]="lotteryData.type" required>
+        <ion-select-option value="number">Números</ion-select-option>
+        <ion-select-option value="animal">Animalitos</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-button expand="block" (click)="save()">Guardar</ion-button>
+  </form>
+
+  <div *ngIf="mode === 'view'">
+    <p>Nombre: {{ lotteryData.name }}</p>
+    <p>Tipo: {{ lotteryData.type }}</p>
+  </div>
+</ion-content>
