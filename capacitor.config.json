@@ -1,0 +1,6 @@
+{
+  "appId": "com.goldenrat.app",
+  "appName": "golden-rat",
+  "webDir": "www",
+  "bundledWebRuntime": false
+}

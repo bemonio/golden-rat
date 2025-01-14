@@ -1,48 +1,31 @@
 import { Injectable } from '@angular/core';
-import { CapacitorSQLite, SQLiteDBConnection } from '@capacitor-community/sqlite';
+import { DataService } from './data.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class LotteryService {
-  private db: SQLiteDBConnection | null = null;
+  private storeName = 'lotteries';
 
-  constructor() {
-    this.initDB();
+  constructor(private dataService: DataService) {}
+
+  getAllLotteries() {
+    return this.dataService.getAll(this.storeName);
   }
 
-  async initDB() {
-    try {
-      const dbName = 'golden_rat_db';
-      this.db = await CapacitorSQLite.createConnection({
-        database: dbName,
-        version: 1,
-        encrypted: false,
-        mode: 'no-encryption',
-      });
-      await this.db.open();
-      await this.db.execute(`
-        CREATE TABLE IF NOT EXISTS lotteries (
-          id INTEGER PRIMARY KEY,
-          name TEXT NOT NULL,
-          type TEXT CHECK(type IN ('numbers', 'animalitos')),
-          schedule TEXT NOT NULL
-        );
-      `);
-    } catch (error) {
-      console.error('Error initializing database:', error);
-    }
+  getLotteryById(id: number) {
+    return this.dataService.getById(this.storeName, id);
   }
 
-  async addLottery(lottery: { name: string; type: string; schedule: string }) {
-    if (!this.db) return;
-    const query = `
-      INSERT INTO lotteries (name, type, schedule)
-      VALUES (?, ?, ?);
-    `;
-    const values = [lottery.name, lottery.type, lottery.schedule];
-    await this.db.run(query, values);
+  addLottery(lottery: { name: string; type: string }) {
+    return this.dataService.add(this.storeName, lottery);
   }
 
-  async getLotteries() {
-    if (!this.db) return [];
+  updateLottery(lottery: { id: number; name: string; type: string }) {
+    return this.dataService.update(this.storeName, lottery);
+  }
+
+  deleteLottery(id: number) {
+    return this.dataService.delete(this.storeName, id);
+  }
+}

@@ -2,7 +2,9 @@ version: '3.5'
 
 services:
   golden-rat:
-    image: node:18
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: golden-rat
     user: "node"
     working_dir: /golden-rat
@@ -11,7 +13,7 @@ services:
       && mkdir -p /home/node/.npm-global
       && npm config set prefix /home/node/.npm-global
       && export PATH=$PATH:/home/node/.npm-global/bin
-      && npm install -g @ionic/cli @angular/cli
+      && npm install -g @ionic/cli @angular/cli @capacitor/android
       && chown -R node:node /golden-rat
       && echo '==== done ====='
       && sleep infinity"
@@ -20,7 +22,10 @@ services:
     restart: always
     environment:
       - HOME=/home/node
-      - PATH=/home/node/.npm-global/bin:$PATH
+      - PATH=/home/node/.npm-global/bin:$PATH:/home/node/android-sdk/cmdline-tools/latest/bin
+      - JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
+      - ANDROID_HOME=/home/node/android-sdk
+      - ANDROID_SDK_ROOT=/home/node/android-sdk
     networks:
       - traefik_network
     labels:

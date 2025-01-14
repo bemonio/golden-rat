@@ -9,7 +9,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class LotteryDetailPage implements OnInit {
   mode: 'view' | 'edit' = 'view';
   lotteryId: number = 0;
-  lotteryData = { name: '', type: '' }; // Inicialización de la propiedad lotteryData
+  lotteryData = { name: '', type: '' };
 
   constructor(private route: ActivatedRoute, private router: Router) {}
 
@@ -25,7 +25,6 @@ export class LotteryDetailPage implements OnInit {
   }
 
   getLotteryById(id: number) {
-    // Simulación de obtención de datos, en el futuro será reemplazado por el servicio
     const mockLotteries = [
       { id: 1, name: 'Lotería 1', type: 'number' },
       { id: 2, name: 'Lotería 2', type: 'animal' },
@@ -34,7 +33,6 @@ export class LotteryDetailPage implements OnInit {
   }
 
   save() {
-    // Lógica para guardar la lotería
     console.log('Guardando lotería:', this.lotteryData);
     this.router.navigate(['/lottery']);
   }

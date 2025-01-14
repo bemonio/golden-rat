@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { DatabaseService } from '../../../services/database.service';
+import { LotteryService } from '../../../services/lottery.service';
 
 @Component({
   selector: 'app-lottery-list',
@@ -11,7 +11,7 @@ export class LotteryListPage implements OnInit {
   lotteries: any[] = [];
   searchQuery = '';
 
-  constructor(private router: Router, private dbService: DatabaseService) {}
+  constructor(private router: Router, private dbService: LotteryService) {}
 
   async ngOnInit() {
     this.lotteries = await this.dbService.getAllLotteries();
