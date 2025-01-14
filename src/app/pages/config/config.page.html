@@ -1,0 +1,14 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Configuración</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-item>
+    <ion-label position="stacked">Monto Máximo de Apuesta</ion-label>
+    <ion-input [(ngModel)]="maxBetAmount" type="number" placeholder="Ingrese el monto máximo"></ion-input>
+  </ion-item>
+
+  <ion-button expand="block" (click)="saveConfig()">Guardar</ion-button>
+</ion-content>

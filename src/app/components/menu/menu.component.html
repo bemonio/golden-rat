@@ -1,0 +1,28 @@
+<ion-menu side="start" menuId="main-menu" contentId="main-content">
+  <ion-header>
+    <ion-toolbar color="primary">
+      <ion-title>Golden Rat</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-content>
+    <ion-list>
+      <ion-item routerLink="/home" routerDirection="root">
+        <ion-icon name="home" slot="start"></ion-icon>
+        <ion-label>Home</ion-label>
+      </ion-item>
+      <ion-item routerLink="/history" routerDirection="forward">
+        <ion-icon name="list" slot="start"></ion-icon>
+        <ion-label>Historial</ion-label>
+      </ion-item>
+      <ion-item routerLink="/settings" routerDirection="forward">
+        <ion-icon name="settings" slot="start"></ion-icon>
+        <ion-label>Configuración</ion-label>
+      </ion-item>
+      <ion-item button class="ion-activatable" (click)="logout()">
+        <ion-icon name="log-out" slot="start"></ion-icon>
+        <ion-label>Logout</ion-label>
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</ion-menu>

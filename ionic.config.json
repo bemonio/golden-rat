@@ -1,0 +1,7 @@
+{
+  "name": "golden_rat",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}

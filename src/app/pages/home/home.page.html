@@ -1,0 +1,66 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Punto de Venta</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <form (ngSubmit)="placeBet()">
+    <!-- Selección del tipo de apuesta -->
+    <ion-item>
+      <ion-label>Tipo de Apuesta</ion-label>
+      <ion-select [(ngModel)]="betType" name="betType" required>
+        <ion-select-option value="animalitos">Animalitos</ion-select-option>
+        <ion-select-option value="números">Números</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <!-- Campo para la opción de apuesta -->
+    <ion-item>
+      <ion-label>Opción</ion-label>
+      <ion-input
+        [(ngModel)]="betOption"
+        name="betOption"
+        placeholder="Ej: 23 o Perro"
+        required
+      ></ion-input>
+    </ion-item>
+
+    <!-- Campo para el monto de la apuesta -->
+    <ion-item>
+      <ion-label>Monto</ion-label>
+      <ion-input
+        [(ngModel)]="betAmount"
+        name="betAmount"
+        type="number"
+        placeholder="Monto en $"
+        required
+      ></ion-input>
+    </ion-item>
+
+    <!-- Botón para confirmar la apuesta -->
+    <ion-button expand="block" type="submit" [disabled]="!betType || !betOption || !betAmount">
+      Confirmar Apuesta
+    </ion-button>
+
+    <!-- Botón para limpiar los campos -->
+    <ion-button expand="block" color="medium" (click)="clearFields()">
+      Limpiar
+    </ion-button>
+  </form>
+
+  <!-- Historial de apuestas -->
+  <ion-list *ngIf="betHistory.length > 0">
+    <ion-list-header>
+      <ion-label>Historial de Apuestas</ion-label>
+    </ion-list-header>
+    <ion-item *ngFor="let bet of betHistory">
+      <ion-label>
+        {{ bet.type }}: {{ bet.option }} - ${{ bet.amount }}
+      </ion-label>
+    </ion-item>
+  </ion-list>
+</ion-content>
