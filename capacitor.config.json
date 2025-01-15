@@ -2,5 +2,8 @@
   "appId": "com.goldenrat.app",
   "appName": "golden-rat",
   "webDir": "www",
-  "bundledWebRuntime": false
+  "bundledWebRuntime": false,
+  "server": {
+    "androidScheme": "https"
+  }
 }
