@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { LotteryService } from '../../../services/lottery.service';
 
 @Component({
   selector: 'app-lottery-detail',
@@ -9,31 +11,48 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class LotteryDetailPage implements OnInit {
   mode: 'view' | 'edit' = 'view';
   lotteryId: number = 0;
-  lotteryData = { name: '', type: '' };
+  lotteryForm: FormGroup;
 
-  constructor(private route: ActivatedRoute, private router: Router) {}
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private fb: FormBuilder,
+    private lotteryService: LotteryService
+  ) {
+    this.lotteryForm = this.fb.group({
+      name: ['', [Validators.required, Validators.minLength(3)]],
+      type: ['', Validators.required],
+    });
+  }
 
-  ngOnInit() {
+  async ngOnInit() {
     const idParam = this.route.snapshot.paramMap.get('id');
-    this.lotteryId = idParam ? Number(idParam) : 0;
-    this.mode = this.route.snapshot.url[1].path as 'view' | 'edit';
+    if (this.route.snapshot.url[0].path === 'add') {
+      this.mode = 'edit';
+    } else if (idParam) {
+      this.lotteryId = Number(idParam);
+      this.mode = this.route.snapshot.url[1].path as 'view' | 'edit';
 
-    // Simulación de carga de datos para edición o visualización
-    if (this.mode === 'edit' || this.mode === 'view') {
-      this.lotteryData = this.getLotteryById(this.lotteryId);
+      if (this.lotteryId) {
+        const lottery = await this.lotteryService.getLotteryById(this.lotteryId);
+        if (lottery) {
+          this.lotteryForm.patchValue(lottery);
+        }
+      }
     }
   }
 
-  getLotteryById(id: number) {
-    const mockLotteries = [
-      { id: 1, name: 'Lotería 1', type: 'number' },
-      { id: 2, name: 'Lotería 2', type: 'animal' },
-    ];
-    return mockLotteries.find((lottery) => lottery.id === id) || { name: '', type: '' };
-  }
+  async save() {
+    if (this.lotteryForm.invalid) {
+      alert('Por favor, completa todos los campos correctamente.');
+      return;
+    }
 
-  save() {
-    console.log('Guardando lotería:', this.lotteryData);
+    if (this.lotteryId) {
+      await this.lotteryService.updateLottery({ id: this.lotteryId, ...this.lotteryForm.value });
+    } else {
+      await this.lotteryService.addLottery(this.lotteryForm.value);
+    }
     this.router.navigate(['/lottery']);
   }
 }

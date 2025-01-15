@@ -10,9 +10,20 @@ import { AppRoutingModule } from './app-routing.module';
 import { MenuComponent } from './components/menu/menu.component';
 
 @NgModule({
-  declarations: [AppComponent, MenuComponent],
-  imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule],
-  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
-  bootstrap: [AppComponent],
+  declarations: [
+    AppComponent,
+    MenuComponent
+  ],
+  imports: [
+    BrowserModule,
+    IonicModule.forRoot(),
+    AppRoutingModule
+  ],
+  providers: [
+    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
+  ],
+  bootstrap: [
+    AppComponent
+  ],
 })
-export class AppModule {}
+export class AppModule { }

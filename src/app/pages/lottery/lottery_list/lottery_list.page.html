@@ -5,7 +5,9 @@
     </ion-buttons>
     <ion-title>Loterías</ion-title>
     <ion-buttons slot="end">
-      <ion-button (click)="editLottery(0)">Agregar</ion-button>
+      <ion-button (click)="addLottery()">
+        <ion-icon name="add-outline"></ion-icon>
+      </ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
@@ -16,8 +18,15 @@
     <ion-item *ngFor="let lottery of lotteries | filter: searchQuery">
       <ion-label>{{ lottery.name }} ({{ lottery.type }})</ion-label>
       <ion-buttons slot="end">
-        <ion-button (click)="viewLottery(lottery.id)">Ver</ion-button>
-        <ion-button (click)="editLottery(lottery.id)">Editar</ion-button>
+        <ion-button (click)="viewLottery(lottery.id)">
+          <ion-icon name="eye-outline"></ion-icon>
+        </ion-button>
+        <ion-button (click)="editLottery(lottery.id)">
+          <ion-icon name="create-outline"></ion-icon>
+        </ion-button>
+        <ion-button (click)="deleteLottery(lottery.id)">
+          <ion-icon name="trash-outline"></ion-icon>
+        </ion-button>
       </ion-buttons>
     </ion-item>
   </ion-list>

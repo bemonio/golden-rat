@@ -1,19 +1,32 @@
 import { Injectable } from '@angular/core';
+import { Capacitor } from '@capacitor/core';
+import { CapacitorSQLite, SQLiteConnection, SQLiteDBConnection } from '@capacitor-community/sqlite';
+import { openDB, IDBPDatabase } from 'idb';
 
 @Injectable({
   providedIn: 'root',
 })
 export class DataService {
-  private db: any;
+  private db: SQLiteDBConnection | IDBPDatabase | null = null;
+  private dbReady: Promise<void>;
+  private isNative = Capacitor.isNativePlatform();
 
   constructor() {
-    this.initializeDB();
+    this.dbReady = this.initializeDB();
   }
 
-  async initializeDB() {
-    if (this.isWeb()) {
-      // Inicializa IndexedDB
-      const { openDB } = await import('idb');
+  private async initializeDB(): Promise<void> {
+    if (this.isNative) {
+      const sqlite = new SQLiteConnection(CapacitorSQLite);
+      const conn = await sqlite.createConnection('golden-rat-db', false, 'no-encryption', 1, false);
+      if (conn) {
+        await conn.open();
+        this.db = conn;
+        await this.createTable();
+      } else {
+        throw new Error('Failed to create SQLite connection');
+      }
+    } else {
       this.db = await openDB('golden-rat-db', 1, {
         upgrade(db) {
           if (!db.objectStoreNames.contains('lotteries')) {
@@ -21,71 +34,90 @@ export class DataService {
           }
         },
       });
-    } else {
-      // Inicializa SQLite en Android
-      const { CapacitorSQLite, SQLiteConnection } = await import('@capacitor-community/sqlite');
-      const sqlite = new SQLiteConnection(CapacitorSQLite);
-      this.db = await sqlite.createConnection('golden-rat-db', false, 'no-encryption', 1, false);
-      await this.db.open();
-      await this.db.execute(`
+    }
+  }
+
+  private async createTable(): Promise<void> {
+    if (this.isNative && this.db) {
+      const query = `
         CREATE TABLE IF NOT EXISTS lotteries (
-          id INTEGER PRIMARY KEY,
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
           name TEXT NOT NULL,
-          type TEXT CHECK(type IN ('number', 'animal'))
+          type TEXT NOT NULL
         );
-      `);
+      `;
+      await (this.db as SQLiteDBConnection).execute(query);
     }
   }
 
   async getAll(storeName: string): Promise<any[]> {
-    if (this.isWeb()) {
-      return (await this.db.getAll(storeName)) || [];
-    } else {
-      const result = await this.db.query(`SELECT * FROM ${storeName}`);
+    await this.dbReady;
+    if (this.isNative && this.db) {
+      const query = `SELECT * FROM ${storeName}`;
+      const result = await (this.db as SQLiteDBConnection).query(query);
       return result.values || [];
+    } else if (this.db) {
+      return (await (this.db as IDBPDatabase).getAll(storeName)) || [];
     }
+    throw new Error('Database not initialized');
   }
 
-  async getById(storeName: string, id: number): Promise<any> {
-    if (this.isWeb()) {
-      return await this.db.get(storeName, id);
-    } else {
-      const result = await this.db.query(`SELECT * FROM ${storeName} WHERE id = ?`, [id]);
-      return result.values[0] || null;
+  async getById(storeName: string, id: number): Promise<any | null> {
+    await this.dbReady;
+    if (this.isNative && this.db) {
+      const query = `SELECT * FROM ${storeName} WHERE id = ?`;
+      const result = await (this.db as SQLiteDBConnection).query(query, [id]);
+      return result.values?.[0] || null;
+    } else if (this.db) {
+      return await (this.db as IDBPDatabase).get(storeName, id);
     }
+    throw new Error('Database not initialized');
   }
 
-  async add(storeName: string, data: any): Promise<any> {
-    if (this.isWeb()) {
-      return await this.db.add(storeName, data);
-    } else {
+  async add(storeName: string, data: any): Promise<number | void> {
+    await this.dbReady;
+    if (this.isNative && this.db) {
       const keys = Object.keys(data).join(', ');
       const values = Object.values(data);
       const placeholders = values.map(() => '?').join(', ');
-      await this.db.run(`INSERT INTO ${storeName} (${keys}) VALUES (${placeholders})`, values);
+      const query = `INSERT INTO ${storeName} (${keys}) VALUES (${placeholders})`;
+      await (this.db as SQLiteDBConnection).run(query, values);
+    } else if (this.db) {
+      const id = await (this.db as IDBPDatabase).add(storeName, data);
+      if (typeof id === 'number') {
+        return id;
+      }
     }
+    throw new Error('Failed to add record');
   }
-
-  async update(storeName: string, data: any): Promise<any> {
-    if (this.isWeb()) {
-      return await this.db.put(storeName, data);
-    } else {
-      const keys = Object.keys(data).map((key) => `${key} = ?`).join(', ');
-      const values = Object.values(data);
+  
+  async update(storeName: string, data: any): Promise<void> {
+    await this.dbReady;
+    if (this.isNative && this.db) {
+      const keys = Object.keys(data)
+        .filter((key) => key !== 'id')
+        .map((key) => `${key} = ?`)
+        .join(', ');
+      const values = Object.values(data).filter((_, index) => index !== 0);
       values.push(data.id);
-      await this.db.run(`UPDATE ${storeName} SET ${keys} WHERE id = ?`, values);
-    }
-  }
-
-  async delete(storeName: string, id: number): Promise<any> {
-    if (this.isWeb()) {
-      return await this.db.delete(storeName, id);
+      const query = `UPDATE ${storeName} SET ${keys} WHERE id = ?`;
+      await (this.db as SQLiteDBConnection).run(query, values);
+    } else if (this.db) {
+      await (this.db as IDBPDatabase).put(storeName, data);
     } else {
-      await this.db.run(`DELETE FROM ${storeName} WHERE id = ?`, [id]);
+      throw new Error('Database not initialized');
     }
   }
 
-  private isWeb(): boolean {
-    return !('Capacitor' in window);
+  async delete(storeName: string, id: number): Promise<void> {
+    await this.dbReady;
+    if (this.isNative && this.db) {
+      const query = `DELETE FROM ${storeName} WHERE id = ?`;
+      await (this.db as SQLiteDBConnection).run(query, [id]);
+    } else if (this.db) {
+      await (this.db as IDBPDatabase).delete(storeName, id);
+    } else {
+      throw new Error('Database not initialized');
+    }
   }
 }
