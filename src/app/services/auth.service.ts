@@ -35,7 +35,7 @@ export class AuthService {
     const user = await this.auth0Client.getUser();
     localStorage.setItem('authUser', JSON.stringify(user));
   }
-  
+
   async isAuthenticated(): Promise<boolean> {
     const storedUser = localStorage.getItem('authUser');
     if (storedUser) {
