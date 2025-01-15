@@ -12,18 +12,18 @@ export class AppComponent implements OnInit {
 
   async ngOnInit() {
     try {
-      const isAuthenticated = await this.authService.isAuthenticated();
+      const queryParams = window.location.search;
       
-      if (!isAuthenticated) {
-        const queryParams = window.location.search;
-        if (queryParams.includes('code=') && queryParams.includes('state=')) {
-          await this.authService.handleRedirectCallback();
-          window.history.replaceState({}, document.title, window.location.pathname);
-          const authenticated = await this.authService.isAuthenticated();
-          if (authenticated) {
-            this.router.navigate(['/home']);
-          }
-        }
+      if (queryParams.includes('code=') && queryParams.includes('state=')) {
+        await this.authService.handleRedirectCallback();
+        window.history.replaceState({}, document.title, window.location.pathname);
+      }
+  
+      const isAuthenticated = await this.authService.isAuthenticated();
+      if (isAuthenticated) {
+        this.router.navigate(['/home']);
+      } else {
+        this.router.navigate(['/login']);
       }
     } catch (error) {
       console.error('Error during authentication', error);
