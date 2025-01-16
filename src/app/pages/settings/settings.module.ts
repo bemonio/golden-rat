@@ -3,16 +3,16 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { RouterModule } from '@angular/router';
-import { ConfigPage } from './config.page';
+import { SettingsPage } from './settings.page';
 import { FormsModule } from '@angular/forms';
 
 @NgModule({
-  declarations: [ConfigPage],
+  declarations: [SettingsPage],
   imports: [
     CommonModule,
     IonicModule,
     FormsModule,
-    RouterModule.forChild([{ path: '', component: ConfigPage }])
+    RouterModule.forChild([{ path: '', component: SettingsPage }])
   ]
 })
-export class ConfigPageModule { }
+export class SettingsPageModule { }

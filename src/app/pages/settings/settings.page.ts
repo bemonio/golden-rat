@@ -3,10 +3,10 @@ import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-config',
-  templateUrl: './config.page.html',
-  styleUrls: ['./config.page.scss'],
+  templateUrl: './settings.page.html',
+  styleUrls: ['./settings.page.scss'],
 })
-export class ConfigPage {
+export class SettingsPage {
   maxBetAmount: number = 100;
 
   constructor(private router: Router) {}
