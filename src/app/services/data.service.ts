@@ -60,7 +60,7 @@ export class DataService {
           option TEXT NOT NULL,
           description TEXT,
           payout_multiplier REAL,
-          FOREIGN KEY (lottery_id) REFERENCES lotteries(id)
+          FOREIGN KEY (lottery_id) REFERENCES lotteries(id) ON DELETE CASCADE
         );
         `,
         `
@@ -70,7 +70,7 @@ export class DataService {
           day_of_week TEXT NOT NULL,
           time TEXT NOT NULL,
           is_active BOOLEAN DEFAULT 1,
-          FOREIGN KEY (lottery_id) REFERENCES lotteries(id)
+          FOREIGN KEY (lottery_id) REFERENCES lotteries(id) ON DELETE CASCADE
         );
         `,
       ];
@@ -78,7 +78,7 @@ export class DataService {
         await (this.db as SQLiteDBConnection).execute(query);
       }
     }
-  }  
+  }
   
   async getAll(storeName: string): Promise<any[]> {
     await this.dbReady;
