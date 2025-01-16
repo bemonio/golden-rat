@@ -6,7 +6,7 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { LotteryListPage } from './lottery_list/lottery_list.page';
 import { LotteryDetailPage } from './lottery_detail/lottery_detail.page';
-import { FilterPipe } from '../../pipes/filter.pipe';
+import { PipeModule } from 'src/app/pipes/pipe.module';
 
 const routes: Routes = [
   { path: '', component: LotteryListPage },
@@ -21,12 +21,12 @@ const routes: Routes = [
     FormsModule,
     ReactiveFormsModule,
     IonicModule,
-    RouterModule.forChild(routes)
+    RouterModule.forChild(routes),
+    PipeModule
   ],
   declarations: [
     LotteryListPage,
-    LotteryDetailPage,
-    FilterPipe
+    LotteryDetailPage
   ],
 })
-export class LotteryModule { }
+export class LotteryPageModule { }
