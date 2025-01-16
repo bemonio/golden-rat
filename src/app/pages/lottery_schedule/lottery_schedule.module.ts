@@ -29,4 +29,4 @@ const routes: Routes = [
     LotteryScheduleDetailPage
   ],
 })
-export class LotterySchedulePageModule { }
+export class LotteryScheduleModule { }

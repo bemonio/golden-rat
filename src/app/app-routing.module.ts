@@ -6,30 +6,30 @@ const routes: Routes = [
   {
     path: 'login',
     loadChildren: () =>
-      import('./pages/login/login.module').then((m) => m.LoginPageModule),
+      import('./pages/login/login.module').then((m) => m.LoginModule),
   },
   {
     path: 'home',
     loadChildren: () =>
-      import('./pages/home/home.module').then((m) => m.HomePageModule),
+      import('./pages/home/home.module').then((m) => m.HomeModule),
     canActivate: [AuthGuard],
   },
   {
     path: 'settings',
     loadChildren: () =>
-      import('./pages/settings/settings.module').then((m) => m.SettingsPageModule),
+      import('./pages/settings/settings.module').then((m) => m.SettingsModule),
     canActivate: [AuthGuard],
   },
   {
     path: 'lottery',
     loadChildren: () =>
-      import('./pages/lottery/lottery.module').then((m) => m.LotteryPageModule),
+      import('./pages/lottery/lottery.module').then((m) => m.LotteryModule),
     canActivate: [AuthGuard],
   },
   {
     path: 'lottery_schedule',
     loadChildren: () =>
-      import('./pages/lottery_schedule/lottery_schedule.module').then((m) => m.LotterySchedulePageModule),
+      import('./pages/lottery_schedule/lottery_schedule.module').then((m) => m.LotteryScheduleModule),
     canActivate: [AuthGuard],
   },
   {

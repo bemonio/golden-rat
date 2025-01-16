@@ -15,4 +15,4 @@ import { FormsModule } from '@angular/forms';
     RouterModule.forChild([{ path: '', component: HomePage }])
   ]
 })
-export class HomePageModule { }
+export class HomeModule { }

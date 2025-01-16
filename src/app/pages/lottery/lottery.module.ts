@@ -6,7 +6,7 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { LotteryListPage } from './lottery_list/lottery_list.page';
 import { LotteryDetailPage } from './lottery_detail/lottery_detail.page';
-import { PipeModule } from 'src/app/pipes/pipe.module';
+import { PipeModule } from '../../pipes/pipe.module';
 
 const routes: Routes = [
   { path: '', component: LotteryListPage },
@@ -29,4 +29,4 @@ const routes: Routes = [
     LotteryDetailPage
   ],
 })
-export class LotteryPageModule { }
+export class LotteryModule { }

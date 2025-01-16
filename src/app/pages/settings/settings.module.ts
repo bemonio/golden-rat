@@ -15,4 +15,4 @@ import { FormsModule } from '@angular/forms';
     RouterModule.forChild([{ path: '', component: SettingsPage }])
   ]
 })
-export class SettingsPageModule { }
+export class SettingsModule { }

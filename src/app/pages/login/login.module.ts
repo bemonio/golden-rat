@@ -13,4 +13,4 @@ import { LoginPage } from './login.page';
     RouterModule.forChild([{ path: '', component: LoginPage }])
   ]
 })
-export class LoginPageModule { }
+export class LoginModule { }
