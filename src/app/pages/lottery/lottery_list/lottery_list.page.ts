@@ -49,7 +49,7 @@ export class LotteryListPage implements OnInit {
   async deleteLottery(id: number) {
     const alert = await this.alertController.create({
       header: 'Confirmar eliminación',
-      message: '¿Estás seguro de que deseas eliminar esta lotería?',
+      message: '¿Estás seguro de que deseas eliminar?',
       buttons: [
         {
           text: 'Cancelar',
