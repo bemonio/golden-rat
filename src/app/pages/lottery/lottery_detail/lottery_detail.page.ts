@@ -59,22 +59,18 @@ export class LotteryDetailPage implements OnInit {
     const lotteryData = this.lotteryForm.value;
   
     if (this.lotteryId) {
-      // Modo de edición: Actualiza solo la lotería
       await this.lotteryService.updateLottery({ id: this.lotteryId, ...lotteryData });
     } else {
-      // Modo de creación: Crea la lotería y sus opciones
       const createdLottery = await this.lotteryService.addLottery(lotteryData);
   
       if (createdLottery.id !== undefined) {
         this.lotteryId = createdLottery.id;
   
-        // Asigna el lotteryId a las opciones generadas
         const optionsWithLotteryId = this.options.map(option => ({
           ...option,
           lotteryId: this.lotteryId,
         }));
   
-        // Guarda todas las opciones en la base de datos
         await this.lotteryOptionService.addMultipleOptions(this.lotteryId, optionsWithLotteryId);
       } else {
         console.error('El objeto creado no contiene un ID.');
@@ -105,7 +101,7 @@ export class LotteryDetailPage implements OnInit {
   async deleteLotteryOption(id: number) {
     const alert = await this.alertController.create({
       header: 'Confirmar eliminación',
-      message: '¿Estás seguro de que deseas eliminar esta opción de lotería?',
+      message: '¿Estás seguro de que deseas eliminar?',
       buttons: [
         {
           text: 'Cancelar',

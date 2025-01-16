@@ -11,7 +11,7 @@ export class HomePage {
   betOption: string | null = null;
   betAmount: number | null = null;
   betHistory: { type: string; option: string; amount: number }[] = [];
-  maxBetAmount: number = 100; // Límite máximo para las apuestas
+  maxBetAmount: number = 100;
 
   constructor(private alertController: AlertController) {}
 
