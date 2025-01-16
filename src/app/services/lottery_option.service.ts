@@ -16,6 +16,10 @@ export class LotteryOptionService {
     return await this.dataService.getAll(this.storeName);
   }
 
+  async getLotteryOptionsById(id: number): Promise<LotteryOption | undefined> {
+    return await this.dataService.getById(this.storeName, id);
+  }
+
   async addLotteryOption(option: LotteryOption): Promise<void> {
     await this.dataService.add(this.storeName, option);
   }
