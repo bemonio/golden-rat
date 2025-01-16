@@ -1,0 +1,55 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+      <ion-back-button defaultHref="/lotterySchedule"></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{ mode === 'view' ? 'Ver Horario Lotería' : mode === 'edit' ? 'Editar Horario Lotería' : 'Agregar Horario Lotería' }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div *ngIf="lotteries.length === 0; else formContent">
+    <p>No hay loterías disponibles. Por favor, crea una lotería antes de definir un horario.</p>
+    <ion-button expand="block" routerLink="/lottery">Crear Lotería</ion-button>
+  </div>
+
+  <ng-template #formContent>
+    <form [formGroup]="lotteryScheduleForm" *ngIf="mode === 'edit'">
+      <ion-item>
+        <ion-label>Lotería</ion-label>
+        <ion-select formControlName="lotteryId">
+          <ion-select-option *ngFor="let lottery of lotteries" [value]="lottery.id">
+            {{ lottery.name }}
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>Día de la Semana</ion-label>
+        <ion-select formControlName="dayOfWeek">
+          <ion-select-option value="Monday">Lunes</ion-select-option>
+          <ion-select-option value="Tuesday">Martes</ion-select-option>
+          <ion-select-option value="Wednesday">Miércoles</ion-select-option>
+          <ion-select-option value="Thursday">Jueves</ion-select-option>
+          <ion-select-option value="Friday">Viernes</ion-select-option>
+          <ion-select-option value="Saturday">Sábado</ion-select-option>
+          <ion-select-option value="Sunday">Domingo</ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>Hora</ion-label>
+        <ion-datetime formControlName="time" display-format="HH:mm" picker-format="HH:mm"></ion-datetime>
+      </ion-item>
+
+      <ion-button expand="block" (click)="saveLotterySchedule()" [disabled]="lotteryScheduleForm.invalid">Guardar</ion-button>
+    </form>
+
+    <div *ngIf="mode === 'view'">
+      <p>Lotería: {{ getLotteryName() }}</p>
+      <p>Día de la Semana: {{ lotteryScheduleForm.get('dayOfWeek')?.value }}</p>
+      <p>Hora: {{ lotteryScheduleForm.get('time')?.value }}</p>
+    </div>
+  </ng-template>
+</ion-content>

@@ -23,7 +23,13 @@ const routes: Routes = [
   {
     path: 'lottery',
     loadChildren: () =>
-      import('./pages/lottery/lottery.module').then((m) => m.LotteryModule),
+      import('./pages/lottery/lottery.module').then((m) => m.LotteryPageModule),
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'lottery_schedule',
+    loadChildren: () =>
+      import('./pages/lottery_schedule/lottery_schedule.module').then((m) => m.LotterySchedulePageModule),
     canActivate: [AuthGuard],
   },
   {

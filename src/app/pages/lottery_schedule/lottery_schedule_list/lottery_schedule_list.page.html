@@ -1,0 +1,33 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Loterías - Horarios</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="addLotterySchedule()">
+        <ion-icon slot="icon-only" name="add-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-searchbar (ionInput)="search($event)"></ion-searchbar>
+  <ion-list>
+    <ion-item *ngFor="let lotterySchedule of lotterySchedules | filter: searchQuery">
+      <ion-label>{{ lotterySchedule.name }} ({{ lotterySchedule.type }})</ion-label>
+      <ion-buttons slot="end">
+        <ion-button (click)="viewLotterySchedule(lotterySchedule.id)">
+          <ion-icon slot="icon-only" name="eye-outline"></ion-icon>
+        </ion-button>
+        <ion-button (click)="editLotterySchedule(lotterySchedule.id)">
+          <ion-icon slot="icon-only" name="create-outline"></ion-icon>
+        </ion-button>
+        <ion-button (click)="deleteLotterySchedule(lotterySchedule.id)">
+          <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-item>
+  </ion-list>
+</ion-content>

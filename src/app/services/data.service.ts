@@ -18,7 +18,7 @@ export class DataService {
   private async initializeDB(): Promise<void> {
     if (this.isNative) {
       const sqlite = new SQLiteConnection(CapacitorSQLite);
-      const conn = await sqlite.createConnection('golden-rat-db', true, 'no-encryption', 1, false);
+      const conn = await sqlite.createConnection('golden-rat-db', false, 'no-encryption', 1, false);
       if (conn) {
         await conn.open();
         this.db = conn;
@@ -34,6 +34,9 @@ export class DataService {
           }
           if (!db.objectStoreNames.contains('lottery_options')) {
             db.createObjectStore('lottery_options', { keyPath: 'id', autoIncrement: true });
+          }
+          if (!db.objectStoreNames.contains('lottery_schedules')) {
+            db.createObjectStore('lottery_schedules', { keyPath: 'id', autoIncrement: true });
           }
         },
       });
@@ -60,12 +63,22 @@ export class DataService {
           FOREIGN KEY (lottery_id) REFERENCES lotteries(id)
         );
         `,
+        `
+        CREATE TABLE IF NOT EXISTS lottery_schedules (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          lottery_id INTEGER NOT NULL,
+          day_of_week TEXT NOT NULL,
+          time TEXT NOT NULL,
+          is_active BOOLEAN DEFAULT 1,
+          FOREIGN KEY (lottery_id) REFERENCES lotteries(id)
+        );
+        `,
       ];
       for (const query of queries) {
         await (this.db as SQLiteDBConnection).execute(query);
       }
     }
-  }
+  }  
   
   async getAll(storeName: string): Promise<any[]> {
     await this.dbReady;
