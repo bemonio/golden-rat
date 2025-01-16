@@ -18,11 +18,11 @@ export class DataService {
   private async initializeDB(): Promise<void> {
     if (this.isNative) {
       const sqlite = new SQLiteConnection(CapacitorSQLite);
-      const conn = await sqlite.createConnection('golden-rat-db', false, 'no-encryption', 1, false);
+      const conn = await sqlite.createConnection('golden-rat-db', true, 'no-encryption', 1, false);
       if (conn) {
         await conn.open();
         this.db = conn;
-        await this.createTable();
+        await this.createTables();
       } else {
         throw new Error('Failed to create SQLite connection');
       }
@@ -32,24 +32,41 @@ export class DataService {
           if (!db.objectStoreNames.contains('lotteries')) {
             db.createObjectStore('lotteries', { keyPath: 'id', autoIncrement: true });
           }
+          if (!db.objectStoreNames.contains('lottery_options')) {
+            db.createObjectStore('lottery_options', { keyPath: 'id', autoIncrement: true });
+          }
         },
       });
     }
   }
-
-  private async createTable(): Promise<void> {
+  
+  private async createTables(): Promise<void> {
     if (this.isNative && this.db) {
-      const query = `
+      const queries = [
+        `
         CREATE TABLE IF NOT EXISTS lotteries (
           id INTEGER PRIMARY KEY AUTOINCREMENT,
           name TEXT NOT NULL,
           type TEXT NOT NULL
         );
-      `;
-      await (this.db as SQLiteDBConnection).execute(query);
+        `,
+        `
+        CREATE TABLE IF NOT EXISTS lottery_options (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          lottery_id INTEGER NOT NULL,
+          option TEXT NOT NULL,
+          description TEXT,
+          payout_multiplier REAL,
+          FOREIGN KEY (lottery_id) REFERENCES lotteries(id)
+        );
+        `,
+      ];
+      for (const query of queries) {
+        await (this.db as SQLiteDBConnection).execute(query);
+      }
     }
   }
-
+  
   async getAll(storeName: string): Promise<any[]> {
     await this.dbReady;
     if (this.isNative && this.db) {
@@ -74,7 +91,7 @@ export class DataService {
     throw new Error('Database not initialized');
   }
 
-  async add(storeName: string, data: any): Promise<number | void> {
+  async add(storeName: string, data: any): Promise<any> {
     await this.dbReady;
     if (this.isNative && this.db) {
       const keys = Object.keys(data).join(', ');
@@ -82,15 +99,18 @@ export class DataService {
       const placeholders = values.map(() => '?').join(', ');
       const query = `INSERT INTO ${storeName} (${keys}) VALUES (${placeholders})`;
       await (this.db as SQLiteDBConnection).run(query, values);
+  
+      const lastIdQuery = `SELECT last_insert_rowid() as id`;
+      const result = await (this.db as SQLiteDBConnection).query(lastIdQuery);
+      const id = result.values?.[0]?.id;
+      return { id, ...data };
     } else if (this.db) {
       const id = await (this.db as IDBPDatabase).add(storeName, data);
-      if (typeof id === 'number') {
-        return id;
-      }
+      return { id, ...data };
     }
     throw new Error('Failed to add record');
   }
-  
+    
   async update(storeName: string, data: any): Promise<void> {
     await this.dbReady;
     if (this.isNative && this.db) {

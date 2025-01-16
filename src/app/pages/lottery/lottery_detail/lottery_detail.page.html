@@ -18,23 +18,56 @@
       <p *ngIf="lotteryForm.get('name')?.hasError('required')">El nombre es obligatorio.</p>
       <p *ngIf="lotteryForm.get('name')?.hasError('minlength')">El nombre debe tener al menos 3 caracteres.</p>
     </div>
-
+  
     <ion-item>
       <ion-label>Tipo</ion-label>
-      <ion-select formControlName="type">
-        <ion-select-option value="number">Números</ion-select-option>
+      <ion-select formControlName="type" (ionChange)="onTypeChange($event.detail.value)">
+      <ion-select-option value="2 digits">"2 Números"</ion-select-option>
+        <ion-select-option value="3 digits">3 Números</ion-select-option>
         <ion-select-option value="animal">Animalitos</ion-select-option>
       </ion-select>
     </ion-item>
     <div *ngIf="lotteryForm.get('type')?.touched && lotteryForm.get('type')?.invalid">
       <p>El tipo es obligatorio.</p>
     </div>
-
-    <ion-button expand="block" (click)="save()" [disabled]="lotteryForm.invalid">Guardar</ion-button>
+  
+    <ion-button expand="block" (click)="saveLottery()" [disabled]="lotteryForm.invalid">Guardar</ion-button>
   </form>
+
+  <div *ngIf="mode === 'edit'">
+    <ion-title>Opciones de Apuestas</ion-title>
+
+    <ion-list>
+      <ion-item *ngFor="let option of options">
+        <ion-input [(ngModel)]="option.option" placeholder="Opción"></ion-input>
+        <ion-buttons slot="end">
+          <ion-button (click)="updateLotteryOption(option)">
+            <ion-icon slot="icon-only" name="save-outline"></ion-icon>
+          </ion-button>
+          <ion-button (click)="deleteLotteryOption(option.id!)">
+            <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+      </ion-item>
+    </ion-list>
+
+    <ion-item>
+      <ion-input [(ngModel)]="newOption.option" placeholder="Nueva Opción"></ion-input>
+      <ion-button (click)="addLotteryOption()">
+        <ion-icon slot="icon-only" name="add-outline"></ion-icon>
+      </ion-button>
+    </ion-item>
+  </div>
 
   <div *ngIf="mode === 'view'">
     <p>Nombre: {{ lotteryForm.get('name')?.value }}</p>
     <p>Tipo: {{ lotteryForm.get('type')?.value }}</p>
+    <ion-list>
+      <ion-item *ngFor="let option of options">
+        <ion-label>
+          {{ option.option }} - {{ option.type }}
+        </ion-label>
+      </ion-item>
+    </ion-list>
   </div>
 </ion-content>

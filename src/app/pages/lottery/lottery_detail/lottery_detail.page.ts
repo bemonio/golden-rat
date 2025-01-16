@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AlertController } from '@ionic/angular';
 import { LotteryService } from '../../../services/lottery.service';
+import { LotteryOptionService } from 'src/app/services/lottery_option.service';
+import { LotteryOption } from 'src/app/interfaces/lottery_option.interface';
 
 @Component({
   selector: 'app-lottery-detail',
@@ -12,12 +15,16 @@ export class LotteryDetailPage implements OnInit {
   mode: 'view' | 'edit' = 'view';
   lotteryId: number = 0;
   lotteryForm: FormGroup;
+  options: LotteryOption[] = [];
+  newOption: LotteryOption = { lotteryId: 0, option: '', type: ''};
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private fb: FormBuilder,
-    private lotteryService: LotteryService
+    private alertController: AlertController,
+    private lotteryService: LotteryService,
+    private lotteryOptionService: LotteryOptionService
   ) {
     this.lotteryForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(3)]],
@@ -37,22 +44,90 @@ export class LotteryDetailPage implements OnInit {
         const lottery = await this.lotteryService.getLotteryById(this.lotteryId);
         if (lottery) {
           this.lotteryForm.patchValue(lottery);
+          this.options = await this.lotteryOptionService.getLotteryOptionsByLotteryId(this.lotteryId);
         }
       }
     }
   }
 
-  async save() {
+  async saveLottery() {
     if (this.lotteryForm.invalid) {
       alert('Por favor, completa todos los campos correctamente.');
       return;
     }
-
+  
+    const lotteryData = this.lotteryForm.value;
+  
     if (this.lotteryId) {
-      await this.lotteryService.updateLottery({ id: this.lotteryId, ...this.lotteryForm.value });
+      // Modo de edición: Actualiza solo la lotería
+      await this.lotteryService.updateLottery({ id: this.lotteryId, ...lotteryData });
     } else {
-      await this.lotteryService.addLottery(this.lotteryForm.value);
+      // Modo de creación: Crea la lotería y sus opciones
+      const createdLottery = await this.lotteryService.addLottery(lotteryData);
+  
+      if (createdLottery.id !== undefined) {
+        this.lotteryId = createdLottery.id;
+  
+        // Asigna el lotteryId a las opciones generadas
+        const optionsWithLotteryId = this.options.map(option => ({
+          ...option,
+          lotteryId: this.lotteryId,
+        }));
+  
+        // Guarda todas las opciones en la base de datos
+        await this.lotteryOptionService.addMultipleOptions(this.lotteryId, optionsWithLotteryId);
+      } else {
+        console.error('El objeto creado no contiene un ID.');
+        alert('Hubo un problema al crear la lotería. Por favor, intenta de nuevo.');
+        return;
+      }
     }
+  
     this.router.navigate(['/lottery']);
+  }  
+  
+  async addLotteryOption() {
+    if (!this.newOption.option) {
+      alert('Por favor, completa todos los campos de la nueva opción.');
+      return;
+    }
+    this.newOption.lotteryId = this.lotteryId;
+    await this.lotteryOptionService.addLotteryOption(this.newOption);
+    this.options = await this.lotteryOptionService.getLotteryOptionsByLotteryId(this.lotteryId);
+    this.newOption = { lotteryId: 0, option: '', type: ''};
   }
+
+  async updateLotteryOption(option: LotteryOption) {
+    await this.lotteryOptionService.updateLotteryOption(option);
+    this.options = await this.lotteryOptionService.getLotteryOptionsByLotteryId(this.lotteryId);
+  }
+
+  async deleteLotteryOption(id: number) {
+    const alert = await this.alertController.create({
+      header: 'Confirmar eliminación',
+      message: '¿Estás seguro de que deseas eliminar esta opción de lotería?',
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+        },
+        {
+          text: 'Eliminar',
+          role: 'destructive',
+          handler: async () => {
+            await this.lotteryOptionService.deleteLotteryOption(id);
+            this.options = await this.lotteryOptionService.getLotteryOptionsByLotteryId(this.lotteryId);
+          },
+        },
+      ],
+    });
+  
+    await alert.present();
+  }
+
+  onTypeChange(type: '2 digits' | '3 digits' | 'animal') {
+    if (this.mode === 'edit' && !this.lotteryId) {
+      this.options = this.lotteryOptionService.generateOptions(type, this.lotteryId);
+    }
+  }  
 }

@@ -14,17 +14,15 @@ export class LotteryListPage implements OnInit {
 
   constructor(
     private router: Router,
-    private dbService: LotteryService,
-    private alertController: AlertController
+    private alertController: AlertController,
+    private dbService: LotteryService
   ) {}
 
   ngOnInit() {
-    // Opcional: Cargar la lista inicialmente si la página se muestra por primera vez
     this.loadLotteries();
   }
 
   ionViewWillEnter() {
-    // Recargar la lista cada vez que la página se muestra
     this.loadLotteries();
   }
 
