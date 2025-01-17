@@ -33,18 +33,18 @@ export class LotteryScheduleDetailPage implements OnInit {
   async ngOnInit() {
     // Cargar loterías disponibles
     this.lotteries = await this.lotteryService.getAllLotteries();
-  
+
     if (this.lotteries.length === 0) {
       return;
     }
-  
+
     const idParam = this.route.snapshot.paramMap.get('id');
     if (this.route.snapshot.url[0].path === 'add') {
       this.mode = 'edit';
     } else if (idParam) {
       this.lotteryScheduleId = Number(idParam);
       this.mode = this.route.snapshot.url[1].path as 'view' | 'edit';
-  
+
       if (this.lotteryScheduleId) {
         const lotterySchedule = await this.lotteryScheduleService.getLotteryScheduleById(this.lotteryScheduleId);
         if (lotterySchedule) {
@@ -59,16 +59,16 @@ export class LotteryScheduleDetailPage implements OnInit {
       alert('Por favor, completa todos los campos correctamente.');
       return;
     }
-  
+
     let lotteryScheduleData = this.lotteryScheduleForm.value;
-  
+
     if (lotteryScheduleData.time) {
       const selectedTime = new Date(lotteryScheduleData.time);
       const hours = selectedTime.getHours().toString().padStart(2, '0');
       const minutes = selectedTime.getMinutes().toString().padStart(2, '0');
       lotteryScheduleData.time = `${hours}:${minutes}`;
     }
-  
+
     if (this.lotteryScheduleId) {
       await this.lotteryScheduleService.updateLotterySchedule({ id: this.lotteryScheduleId, ...lotteryScheduleData });
     } else {
@@ -81,13 +81,13 @@ export class LotteryScheduleDetailPage implements OnInit {
         return;
       }
     }
-  
-    this.router.navigate(['/lotterySchedule']);
+
+    this.router.navigate(['/lottery_schedule']);
   }
 
   getLotteryName(): string {
     const lotteryId = this.lotteryScheduleForm.get('lotteryId')?.value;
     const lottery = this.lotteries.find((lottery) => lottery.id === lotteryId);
     return lottery ? lottery.name : 'No definida';
-  }  
+  }
 }
