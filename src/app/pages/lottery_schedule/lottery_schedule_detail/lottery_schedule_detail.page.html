@@ -40,7 +40,11 @@
 
       <ion-item>
         <ion-label>Hora</ion-label>
-        <ion-datetime formControlName="time" display-format="HH:mm" picker-format="HH:mm"></ion-datetime>
+        <ion-datetime formControlName="time"
+                      presentation="time"
+                      display-format="HH:mm"
+                      picker-format="HH:mm">
+        </ion-datetime>
       </ion-item>
 
       <ion-button expand="block" (click)="saveLotterySchedule()" [disabled]="lotteryScheduleForm.invalid">Guardar</ion-button>
@@ -49,7 +53,7 @@
     <div *ngIf="mode === 'view'">
       <p>Lotería: {{ getLotteryName() }}</p>
       <p>Día de la Semana: {{ lotteryScheduleForm.get('dayOfWeek')?.value }}</p>
-      <p>Hora: {{ lotteryScheduleForm.get('time')?.value }}</p>
+      <p>Hora: {{ lotteryScheduleForm.get('time')?.value | formatTime}}</p>
     </div>
   </ng-template>
 </ion-content>

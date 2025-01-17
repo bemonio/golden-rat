@@ -60,7 +60,14 @@ export class LotteryScheduleDetailPage implements OnInit {
       return;
     }
   
-    const lotteryScheduleData = this.lotteryScheduleForm.value;
+    let lotteryScheduleData = this.lotteryScheduleForm.value;
+  
+    if (lotteryScheduleData.time) {
+      const selectedTime = new Date(lotteryScheduleData.time);
+      const hours = selectedTime.getHours().toString().padStart(2, '0');
+      const minutes = selectedTime.getMinutes().toString().padStart(2, '0');
+      lotteryScheduleData.time = `${hours}:${minutes}`;
+    }
   
     if (this.lotteryScheduleId) {
       await this.lotteryScheduleService.updateLotterySchedule({ id: this.lotteryScheduleId, ...lotteryScheduleData });

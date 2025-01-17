@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { DataService } from './data.service';
 import { LotterySchedule } from '../interfaces/lottery_schedule.interface';
+import { LotteryService } from './lottery.service';
 
 @Injectable({
   providedIn: 'root',
@@ -8,10 +9,19 @@ import { LotterySchedule } from '../interfaces/lottery_schedule.interface';
 export class LotteryScheduleService {
   private storeName = 'lottery_schedules';
 
-  constructor(private dataService: DataService) {}
+  constructor(
+    private dataService: DataService,
+    private lotteryService: LotteryService
+  ) {}
 
-  async getAllLotterySchedules(): Promise<LotterySchedule[]> {
-    return await this.dataService.getAll(this.storeName);
+  async getAllLotterySchedules(): Promise<any[]> {
+    const schedules: LotterySchedule[] = await this.dataService.getAll(this.storeName);
+    const lotteries = await this.lotteryService.getAllLotteries();
+
+    return schedules.map((schedule) => ({
+      ...schedule,
+      lotteryName: lotteries.find((lottery) => lottery.id === schedule.lotteryId)?.name || 'Desconocida',
+    }));
   }
 
   async getLotteryScheduleById(id: number): Promise<LotterySchedule | void> {
@@ -30,9 +40,19 @@ export class LotteryScheduleService {
     await this.dataService.delete(this.storeName, scheduleId);
   }
 
-  async getLotterySchedulesByLotteryId(lotteryId: number): Promise<LotterySchedule[]> {
-    const allLotterySchedules = await this.getAllLotterySchedules();
-    return allLotterySchedules.filter((schedule) => schedule.lotteryId === lotteryId);
+  async getLotterySchedulesByLotteryId(lotteryId: number): Promise<any[]> {
+    const schedules: LotterySchedule[] = await this.dataService.getAll(this.storeName);
+    const filteredSchedules = schedules.filter((schedule) => schedule.lotteryId === lotteryId);
+
+    return Promise.all(
+      filteredSchedules.map(async (schedule) => {
+        const lottery = await this.lotteryService.getLotteryById(schedule.lotteryId);
+        return {
+          ...schedule,
+          lotteryName: lottery?.name || 'Desconocida',
+        };
+      })
+    );
   }
 
   async addMultipleLotterySchedules(lotteryId: number, schedules: LotterySchedule[]): Promise<void> {
