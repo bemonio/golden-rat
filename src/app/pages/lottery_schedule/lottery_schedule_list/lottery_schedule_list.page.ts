@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
 import { LotteryScheduleService } from '../../../services/lottery_schedule.service';
@@ -10,6 +10,7 @@ import { LotterySchedule } from 'src/app/interfaces/lottery_schedule.interface';
   styleUrls: ['./lottery_schedule_list.page.scss'],
 })
 export class LotteryScheduleListPage implements OnInit {
+  @Input() lotteryId?: number;
   lotterySchedules: LotterySchedule[] = [];
   searchQuery = '';
 
@@ -28,7 +29,11 @@ export class LotteryScheduleListPage implements OnInit {
   }
 
   async loadLotterySchedule() {
-    this.lotterySchedules = await this.lotteryScheduleService.getAllLotterySchedules();
+    if (this.lotteryId) {
+      this.lotterySchedules = await this.lotteryScheduleService.getLotterySchedulesByLotteryId(this.lotteryId);
+    } else {
+      this.lotterySchedules = await this.lotteryScheduleService.getAllLotterySchedules();
+    }
   }
 
   search(event: any) {
@@ -36,7 +41,13 @@ export class LotteryScheduleListPage implements OnInit {
   }
 
   addLotterySchedule() {
-    this.router.navigate(['/lottery_schedule/add']);
+    if (this.lotteryId) {
+      this.router.navigate(['/lottery_schedule/add'], {
+        queryParams: { lotteryId: this.lotteryId },
+      });
+    } else {
+      this.router.navigate(['/lottery_schedule/add']);
+    }
   }
 
   editLotterySchedule(id: number) {
