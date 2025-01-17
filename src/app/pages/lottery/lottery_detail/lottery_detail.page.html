@@ -4,7 +4,11 @@
       <ion-menu-button></ion-menu-button>
       <ion-back-button defaultHref="/lottery"></ion-back-button>
     </ion-buttons>
-    <ion-title>{{ mode === 'view' ? 'Ver Lotería' : mode === 'edit' ? 'Editar Lotería' : 'Agregar Lotería' }}</ion-title>
+
+    <ion-title>
+      {{ mode === 'view' ? 'Ver Lotería' : mode === 'edit' ? 'Editar Lotería' : 'Agregar Lotería' }}
+    </ion-title>
+
   </ion-toolbar>
 </ion-header>
 
@@ -18,7 +22,7 @@
       <p *ngIf="lotteryForm.get('name')?.hasError('required')">El nombre es obligatorio.</p>
       <p *ngIf="lotteryForm.get('name')?.hasError('minlength')">El nombre debe tener al menos 3 caracteres.</p>
     </div>
-  
+
     <ion-item>
       <ion-label>Tipo</ion-label>
       <ion-select formControlName="type" (ionChange)="onTypeChange($event.detail.value)">
@@ -30,8 +34,6 @@
     <div *ngIf="lotteryForm.get('type')?.touched && lotteryForm.get('type')?.invalid">
       <p>El tipo es obligatorio.</p>
     </div>
-  
-    <ion-button expand="block" (click)="saveLottery()" [disabled]="lotteryForm.invalid">Guardar</ion-button>
   </form>
 
   <div *ngIf="mode === 'edit'">
@@ -71,3 +73,9 @@
     </ion-list>
   </div>
 </ion-content>
+
+<ion-footer *ngIf="mode === 'edit'">
+  <ion-toolbar>
+    <ion-button expand="block" (click)="saveLottery()" [disabled]="lotteryForm.invalid">Guardar</ion-button>
+  </ion-toolbar>
+</ion-footer>

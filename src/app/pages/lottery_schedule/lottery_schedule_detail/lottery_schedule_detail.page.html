@@ -46,8 +46,6 @@
                       picker-format="HH:mm">
         </ion-datetime>
       </ion-item>
-
-      <ion-button expand="block" (click)="saveLotterySchedule()" [disabled]="lotteryScheduleForm.invalid">Guardar</ion-button>
     </form>
 
     <div *ngIf="mode === 'view'">
@@ -57,3 +55,10 @@
     </div>
   </ng-template>
 </ion-content>
+
+<ion-footer *ngIf="mode === 'edit'">
+  <ion-toolbar>
+    <ion-button expand="block" (click)="saveLotterySchedule()" [disabled]="lotteryScheduleForm.invalid">Guardar</ion-button>
+  </ion-toolbar>
+</ion-footer>
+
