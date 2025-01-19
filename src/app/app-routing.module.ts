@@ -9,15 +9,27 @@ const routes: Routes = [
       import('./pages/login/login.module').then((m) => m.LoginModule),
   },
   {
-    path: 'home',
+    path: 'bet',
     loadChildren: () =>
-      import('./pages/home/home.module').then((m) => m.HomeModule),
+      import('./pages/bet/bet.module').then((m) => m.BetModule),
     canActivate: [AuthGuard],
   },
   {
     path: 'settings',
     loadChildren: () =>
       import('./pages/settings/settings.module').then((m) => m.SettingsModule),
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'ticket',
+    loadChildren: () =>
+      import('./pages/ticket/ticket.module').then((m) => m.TicketModule),
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'client',
+    loadChildren: () =>
+      import('./pages/client/client.module').then((m) => m.ClientModule),
     canActivate: [AuthGuard],
   },
   {

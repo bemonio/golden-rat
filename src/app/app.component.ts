@@ -13,15 +13,15 @@ export class AppComponent implements OnInit {
   async ngOnInit() {
     try {
       const queryParams = window.location.search;
-      
+
       if (queryParams.includes('code=') && queryParams.includes('state=')) {
         await this.authService.handleRedirectCallback();
         window.history.replaceState({}, document.title, window.location.pathname);
       }
-  
+
       const isAuthenticated = await this.authService.isAuthenticated();
       if (isAuthenticated) {
-        this.router.navigate(['/home']);
+        this.router.navigate(['/bet']);
       } else {
         this.router.navigate(['/login']);
       }
