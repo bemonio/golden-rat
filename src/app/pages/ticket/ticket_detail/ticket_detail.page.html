@@ -1,0 +1,66 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+      <ion-back-button defaultHref="/ticket"></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{ mode === 'view' ? 'Ver Ticket' : mode === 'edit' ? 'Editar Ticket' : 'Agregar Ticket' }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form *ngIf="mode === 'edit'" [formGroup]="ticketForm">
+    <ion-item>
+      <ion-label position="stacked">Cliente</ion-label>
+      <ion-select formControlName="client_id">
+        <ion-select-option *ngFor="let client of clients" [value]="client.id">
+          {{ client.name }} ({{ client.alias }})
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
+    <div *ngIf="ticketForm.get('client_id')?.touched && ticketForm.get('client_id')?.invalid">
+      <p *ngIf="ticketForm.get('client_id')?.hasError('required')">El cliente es obligatorio.</p>
+    </div>
+
+    <ion-item>
+      <ion-label position="stacked">Monto Total</ion-label>
+      <ion-input formControlName="total_amount" type="number"></ion-input>
+    </ion-item>
+    <div *ngIf="ticketForm.get('total_amount')?.touched && ticketForm.get('total_amount')?.invalid">
+      <p *ngIf="ticketForm.get('total_amount')?.hasError('required')">El monto total es obligatorio.</p>
+      <p *ngIf="ticketForm.get('total_amount')?.hasError('min')">El monto debe ser mayor a 0.</p>
+    </div>
+
+    <ion-item>
+      <ion-label>¿Tiene Apuestas Ganadoras?</ion-label>
+      <ion-toggle formControlName="has_winner"></ion-toggle>
+    </ion-item>
+  </form>
+
+  <div *ngIf="mode === 'view' && ticket">
+    <p><strong>Cliente:</strong> {{ client?.name || 'Desconocido' }}</p>
+    <p><strong>Alias:</strong> {{ client?.alias || 'N/A' }}</p>
+    <p><strong>Teléfono:</strong> {{ client?.phone || 'N/A' }}</p>
+    <p><strong>Monto Total:</strong> {{ ticket.total_amount | currency }}</p>
+    <p><strong>¿Ganador?:</strong> {{ ticket.has_winner ? 'Sí' : 'No' }}</p>
+  </div>
+
+  <ion-title>Apuestas del Ticket</ion-title>
+  <ion-list>
+    <ion-item *ngFor="let bet of bets">
+      <ion-label>
+        <p>Lotería ID: {{ bet.lottery_id }}</p>
+        <p>Horario ID: {{ bet.schedule_id }}</p>
+        <p>Opción ID: {{ bet.option_id }}</p>
+        <p>Monto: {{ bet.amount | currency }}</p>
+        <p>Estado: {{ bet.status }}</p>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+</ion-content>
+
+<ion-footer *ngIf="mode === 'edit'">
+  <ion-toolbar>
+    <ion-button expand="block" (click)="saveTicket()" [disabled]="ticketForm.invalid">Guardar</ion-button>
+  </ion-toolbar>
+</ion-footer>
