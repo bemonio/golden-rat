@@ -27,7 +27,7 @@ export class DataService {
         throw new Error('Failed to create SQLite connection');
       }
     } else {
-      this.db = await openDB('golden-rat-db', 1, {
+      this.db = await openDB('golden-rat-db', 2, {
         upgrade(db) {
           if (!db.objectStoreNames.contains('settings')) {
             db.createObjectStore('settings', { keyPath: 'id', autoIncrement: true });
@@ -43,6 +43,9 @@ export class DataService {
           }
           if (!db.objectStoreNames.contains('lottery_schedules')) {
             db.createObjectStore('lottery_schedules', { keyPath: 'id', autoIncrement: true });
+          }
+          if (!db.objectStoreNames.contains('lottery_results')) {
+            db.createObjectStore('lottery_results', { keyPath: 'id', autoIncrement: true });
           }
           if (!db.objectStoreNames.contains('bets')) {
             db.createObjectStore('bets', { keyPath: 'id', autoIncrement: true });
@@ -97,6 +100,19 @@ export class DataService {
           time TEXT NOT NULL,
           is_active BOOLEAN DEFAULT 1,
           FOREIGN KEY (lottery_id) REFERENCES lotteries(id) ON DELETE CASCADE
+        );
+        `,
+        `
+        CREATE TABLE IF NOT EXISTS lottery_results (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          lottery_id INTEGER NOT NULL,
+          lottery_schedule_id INTEGER NOT NULL,
+          lottery_option_id INTEGER NOT NULL,
+          result_time TEXT NOT NULL,
+          created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+          FOREIGN KEY (lottery_id) REFERENCES lotteries(id) ON DELETE CASCADE
+          FOREIGN KEY (lottery_schedule_id) REFERENCES lottery_schedules(id) ON DELETE CASCADE,
+          FOREIGN KEY (lottery_option_id) REFERENCES lottery_options(id) ON DELETE CASCADE
         );
         `,
         `

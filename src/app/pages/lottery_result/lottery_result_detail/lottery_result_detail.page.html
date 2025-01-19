@@ -1,0 +1,73 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+      <ion-back-button defaultHref="/lottery_result"></ion-back-button>
+    </ion-buttons>
+    <ion-title>
+      {{ mode === 'view' ? 'Ver Resultado de Lotería' : mode === 'edit' ? 'Editar Resultado de Lotería' : 'Agregar Resultado' }}
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <!-- 🔹 Mostrar loading mientras se cargan los datos -->
+  <ng-container *ngIf="isLoading; else content">
+    <ion-spinner name="crescent"></ion-spinner>
+    <p>Cargando información...</p>
+  </ng-container>
+
+  <!-- 🔹 Renderizar el contenido solo si isLoading es false -->
+  <ng-template #content>
+    <form *ngIf="mode === 'edit'" [formGroup]="lotteryResultForm">
+      <ion-item>
+        <ion-label position="stacked">Lotería</ion-label>
+        <ion-select formControlName="lottery_id">
+          <ion-select-option *ngFor="let lottery of lotteries" [value]="lottery.id">
+            {{ lottery.name }}
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="stacked">Horario</ion-label>
+        <ion-select formControlName="lottery_schedule_id">
+          <ion-select-option *ngFor="let schedule of lotterySchedules" [value]="schedule.id">
+            {{ schedule.time }}
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="stacked">Opción de Lotería</ion-label>
+        <ion-select formControlName="lottery_option_id">
+          <ion-select-option *ngFor="let option of lotteryOptions" [value]="option.id">
+            {{ option.option }}
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="stacked">Hora del Resultado</ion-label>
+        <ion-datetime formControlName="result_time"
+                      presentation="time"
+                      display-format="HH:mm"
+                      picker-format="HH:mm">
+        </ion-datetime>
+      </ion-item>
+    </form>
+
+    <div *ngIf="mode === 'view' && lotteryResult">
+      <p><strong>Lotería:</strong> {{ getLotteryName(lotteryResult.lottery_id) }}</p>
+      <p><strong>Horario:</strong> {{ getScheduleTime(lotteryResult.lottery_schedule_id) }}</p>
+      <p><strong>Opción:</strong> {{ getOptionName(lotteryResult.lottery_option_id) }}</p>
+      <p><strong>Hora del Resultado:</strong> {{ lotteryResult.result_time }}</p>
+    </div>
+  </ng-template>
+</ion-content>
+
+<ion-footer *ngIf="mode === 'edit'">
+  <ion-toolbar>
+    <ion-button expand="block" (click)="saveLotteryResult()" [disabled]="lotteryResultForm.invalid">Guardar</ion-button>
+  </ion-toolbar>
+</ion-footer>

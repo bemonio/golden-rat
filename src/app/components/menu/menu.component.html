@@ -8,17 +8,17 @@
   <ion-content>
     <ion-list>
       <ion-item routerLink="/bet" routerDirection="root">
-        <ion-icon name="cash-outline" slot="start"></ion-icon>
+        <ion-icon name="dice-outline" slot="start"></ion-icon>
         <ion-label>Apuestas</ion-label>
       </ion-item>
 
       <ion-item routerLink="/ticket" routerDirection="root">
-        <ion-icon name="receipt-outline" slot="start"></ion-icon>
+        <ion-icon name="ticket-outline" slot="start"></ion-icon>
         <ion-label>Tickets</ion-label>
       </ion-item>
 
       <ion-item routerLink="/client" routerDirection="root">
-        <ion-icon name="person-outline" slot="start"></ion-icon>
+        <ion-icon name="people-outline" slot="start"></ion-icon>
         <ion-label>Clientes</ion-label>
       </ion-item>
 
@@ -28,8 +28,13 @@
       </ion-item>
 
       <ion-item routerLink="/lottery_schedule" routerDirection="root">
-        <ion-icon name="calendar-outline" slot="start"></ion-icon>
+        <ion-icon name="time-outline" slot="start"></ion-icon>
         <ion-label>Horarios de Lotería</ion-label>
+      </ion-item>
+
+      <ion-item routerLink="/lottery_result" routerDirection="root">
+        <ion-icon name="trophy-outline" slot="start"></ion-icon>
+        <ion-label>Resultados Lotería</ion-label>
       </ion-item>
 
       <ion-item routerLink="/settings" routerDirection="forward">
@@ -38,7 +43,7 @@
       </ion-item>
 
       <ion-item button class="ion-activatable" (click)="logout()">
-        <ion-icon name="log-out-outline" slot="start"></ion-icon>
+        <ion-icon name="exit-outline" slot="start"></ion-icon>
         <ion-label>Salir</ion-label>
       </ion-item>
     </ion-list>
