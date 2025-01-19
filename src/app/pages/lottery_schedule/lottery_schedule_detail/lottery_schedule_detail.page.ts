@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LotteryScheduleService } from '../../../services/lottery_schedule.service';
 import { LotteryService } from '../../../services/lottery.service';
+import { LotterySchedule } from '../../../interfaces/lottery_schedule.interface';
 import { Lottery } from '../../../interfaces/lottery.interface';
 
 @Component({
@@ -14,6 +15,7 @@ export class LotteryScheduleDetailPage implements OnInit {
   mode: 'view' | 'edit' = 'view';
   lotteryScheduleId: number = 0;
   lotteryScheduleForm: FormGroup;
+  lotterySchedule: LotterySchedule | null = null;
   lotteries: Lottery[] = [];
 
   constructor(
@@ -31,9 +33,7 @@ export class LotteryScheduleDetailPage implements OnInit {
   }
 
   async ngOnInit() {
-    // Cargar loterías disponibles
     this.lotteries = await this.lotteryService.getAllLotteries();
-
     if (this.lotteries.length === 0) {
       return;
     }
@@ -48,9 +48,16 @@ export class LotteryScheduleDetailPage implements OnInit {
       if (this.lotteryScheduleId) {
         const lotterySchedule = await this.lotteryScheduleService.getLotteryScheduleById(this.lotteryScheduleId);
         if (lotterySchedule) {
-          this.lotteryScheduleForm.patchValue(lotterySchedule);
+          this.lotterySchedule = lotterySchedule;
+          this.loadLotteryScheduleData();
         }
       }
+    }
+  }
+
+  loadLotteryScheduleData() {
+    if (this.lotterySchedule) {
+      this.lotteryScheduleForm.patchValue(this.lotterySchedule);
     }
   }
 
@@ -86,8 +93,8 @@ export class LotteryScheduleDetailPage implements OnInit {
   }
 
   getLotteryName(): string {
-    const lotteryId = this.lotteryScheduleForm.get('lotteryId')?.value;
-    const lottery = this.lotteries.find((lottery) => lottery.id === lotteryId);
+    if (!this.lotterySchedule) return 'No definida';
+    const lottery = this.lotteries.find((lottery) => lottery.id === this.lotterySchedule?.lotteryId);
     return lottery ? lottery.name : 'No definida';
   }
 }

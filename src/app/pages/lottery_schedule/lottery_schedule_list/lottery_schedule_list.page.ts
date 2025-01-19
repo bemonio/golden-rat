@@ -21,14 +21,14 @@ export class LotteryScheduleListPage implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.loadLotterySchedule();
+    this.loadLotterySchedules();
   }
 
   ionViewWillEnter() {
-    this.loadLotterySchedule();
+    this.loadLotterySchedules();
   }
 
-  async loadLotterySchedule() {
+  async loadLotterySchedules() {
     if (this.lotteryId) {
       this.lotterySchedules = await this.lotteryScheduleService.getLotterySchedulesByLotteryId(this.lotteryId);
     } else {
@@ -72,7 +72,7 @@ export class LotteryScheduleListPage implements OnInit {
           role: 'destructive',
           handler: async () => {
             await this.lotteryScheduleService.deleteLotterySchedule(id);
-            await this.loadLotterySchedule();
+            await this.loadLotterySchedules();
           },
         },
       ],
