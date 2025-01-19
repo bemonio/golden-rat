@@ -1,0 +1,33 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Apuestas</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="addBet()">
+        <ion-icon slot="icon-only" name="add-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-searchbar (ionInput)="search($event)"></ion-searchbar>
+  <ion-list>
+    <ion-item *ngFor="let bet of bets | filter: searchQuery">
+      <ion-label>{{ tickets[bet.ticket_id] || 'Desconocido' }} {{ lotteries[bet.lottery_id] || 'Desconocida' }} {{ bet.amount | currency }} {{ bet.status }}</ion-label>
+      <ion-buttons slot="end">
+        <ion-button (click)="viewBet(bet.id)">
+          <ion-icon slot="icon-only" name="eye-outline"></ion-icon>
+        </ion-button>
+        <ion-button (click)="editBet(bet.id)">
+          <ion-icon slot="icon-only" name="create-outline"></ion-icon>
+        </ion-button>
+        <ion-button (click)="deleteBet(bet.id)">
+          <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-item>
+  </ion-list>
+</ion-content>

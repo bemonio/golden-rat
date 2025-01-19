@@ -1,0 +1,78 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+      <ion-back-button defaultHref="/bet"></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{ mode === 'view' ? 'Ver Apuesta' : mode === 'edit' ? 'Editar Apuesta' : 'Agregar Apuesta' }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form *ngIf="mode === 'edit'" [formGroup]="betForm">
+    <ion-item>
+      <ion-label position="stacked">Ticket</ion-label>
+      <ion-select formControlName="ticket_id">
+        <ion-select-option *ngFor="let ticket of tickets" [value]="ticket.id">
+          Ticket #{{ ticket.id }}
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="stacked">Lotería</ion-label>
+      <ion-select formControlName="lottery_id" (ionChange)="onLotteryChange()">
+        <ion-select-option *ngFor="let lottery of lotteries" [value]="lottery.id">
+          {{ lottery.name }}
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="stacked">Horario</ion-label>
+      <ion-select formControlName="schedule_id">
+        <ion-select-option *ngFor="let schedule of schedules" [value]="schedule.id">
+          {{ schedule.dayOfWeek }} - {{ schedule.time }}
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="stacked">Opción</ion-label>
+      <ion-select formControlName="option_id">
+        <ion-select-option *ngFor="let option of options" [value]="option.id">
+          {{ option.option }}
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="stacked">Monto</ion-label>
+      <ion-input formControlName="amount" type="number"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="stacked">Estado</ion-label>
+      <ion-select formControlName="status">
+        <ion-select-option value="pending">Pendiente</ion-select-option>
+        <ion-select-option value="winner">Ganador</ion-select-option>
+        <ion-select-option value="loser">Perdedor</ion-select-option>
+      </ion-select>
+    </ion-item>
+  </form>
+
+  <div *ngIf="mode === 'view' && bet">
+    <p><strong>Ticket:</strong> #{{ bet.ticket_id }}</p>
+    <p><strong>Lotería:</strong> {{ getLotteryName(bet.lottery_id) }}</p>
+    <p><strong>Horario:</strong> {{ getScheduleTime(bet.schedule_id) }}</p>
+    <p><strong>Opción:</strong> {{ getOptionName(bet.option_id) }}</p>
+    <p><strong>Monto:</strong> {{ bet.amount | currency }}</p>
+    <p><strong>Estado:</strong> {{ bet.status }}</p>
+  </div>
+</ion-content>
+
+<ion-footer *ngIf="mode === 'edit'">
+  <ion-toolbar>
+    <ion-button expand="block" (click)="saveBet()" [disabled]="betForm.invalid">Guardar</ion-button>
+  </ion-toolbar>
+</ion-footer>

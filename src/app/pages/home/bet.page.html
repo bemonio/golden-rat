@@ -1,0 +1,51 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+
+    <ion-title>Registrar Apuesta</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <form [formGroup]="betForm">
+    <ion-item>
+      <ion-label>Selecciona Lotería</ion-label>
+      <ion-select formControlName="lottery_id" (ionChange)="onLotteryChange()">
+        <ion-select-option *ngFor="let lottery of lotteries" [value]="lottery.id">
+          {{ lottery.name }}
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>Horario</ion-label>
+      <ion-select formControlName="lottery_schedule_id">
+        <ion-select-option *ngFor="let schedule of lotterySchedules" [value]="schedule.id">
+          {{ schedule.dayOfWeek }} - {{ schedule.time | formatTime }}
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>Opción</ion-label>
+      <ion-select formControlName="lottery_option_id">
+        <ion-select-option *ngFor="let option of lotteryOptions" [value]="option.id">
+          {{ option.option }}
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>Monto</ion-label>
+      <ion-input type="number" formControlName="amount"></ion-input>
+    </ion-item>
+  </form>
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-button expand="block" (click)="saveBet()" [disabled]="betForm.invalid">Guardar</ion-button>
+  </ion-toolbar>
+</ion-footer>
