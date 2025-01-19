@@ -1,25 +1,36 @@
-import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { SettingsService } from '../../services/settings.service';
+import { Settings } from 'src/app/interfaces/settings.interface';
 
 @Component({
   selector: 'app-config',
   templateUrl: './settings.page.html',
   styleUrls: ['./settings.page.scss'],
 })
-export class SettingsPage {
-  maxBetAmount: number = 100;
+export class SettingsPage implements OnInit {
+  settings: Settings = { id: 1, max_bet_amount: 100 };
 
-  constructor(private router: Router) {}
+  constructor(
+    private settingsService: SettingsService
+  ) {}
 
-  saveConfig() {
-    localStorage.setItem('maxBetAmount', this.maxBetAmount.toString());
-    this.router.navigate(['/home']);
+  async ngOnInit() {
+    let savedSettings = await this.settingsService.getSettingsById(1);
+
+    if (!savedSettings) {
+      await this.settingsService.addSettings(this.settings);
+      savedSettings = await this.settingsService.getSettingsById(1);
+    }
+
+    this.settings = savedSettings || this.settings;
   }
 
-  ionViewWillEnter() {
-    const savedMaxBet = localStorage.getItem('maxBetAmount');
-    if (savedMaxBet) {
-      this.maxBetAmount = parseInt(savedMaxBet, 10);
+  async saveConfig() {
+    const existingSettings = await this.settingsService.getSettingsById(1);
+    if (existingSettings) {
+      await this.settingsService.updateSettings(this.settings);
+    } else {
+      await this.settingsService.addSettings(this.settings);
     }
   }
 }
