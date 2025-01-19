@@ -29,6 +29,12 @@ export class DataService {
     } else {
       this.db = await openDB('golden-rat-db', 1, {
         upgrade(db) {
+          if (!db.objectStoreNames.contains('settings')) {
+            db.createObjectStore('settings', { keyPath: 'id', autoIncrement: true });
+          }
+          if (!db.objectStoreNames.contains('clients')) {
+            db.createObjectStore('clients', { keyPath: 'id', autoIncrement: true });
+          }
           if (!db.objectStoreNames.contains('lotteries')) {
             db.createObjectStore('lotteries', { keyPath: 'id', autoIncrement: true });
           }
@@ -38,14 +44,34 @@ export class DataService {
           if (!db.objectStoreNames.contains('lottery_schedules')) {
             db.createObjectStore('lottery_schedules', { keyPath: 'id', autoIncrement: true });
           }
+          if (!db.objectStoreNames.contains('bets')) {
+            db.createObjectStore('bets', { keyPath: 'id', autoIncrement: true });
+          }
+          if (!db.objectStoreNames.contains('tickets')) {
+            db.createObjectStore('tickets', { keyPath: 'id', autoIncrement: true });
+          }
         },
       });
     }
   }
-  
+
   private async createTables(): Promise<void> {
     if (this.isNative && this.db) {
       const queries = [
+        `
+        CREATE TABLE IF NOT EXISTS settings (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          max_bet_amount INTEGER NOT NULL
+        );
+        `,
+        `
+        CREATE TABLE IF NOT EXISTS clients (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          name TEXT NOT NULL,
+          alias TEXT NOT NULL,
+          phone TEXT NOT NULL UNIQUE
+        );
+        `,
         `
         CREATE TABLE IF NOT EXISTS lotteries (
           id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -73,13 +99,38 @@ export class DataService {
           FOREIGN KEY (lottery_id) REFERENCES lotteries(id) ON DELETE CASCADE
         );
         `,
+        `
+        CREATE TABLE IF NOT EXISTS bets (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          lottery_id INTEGER NOT NULL,
+          lottery_schedule_id INTEGER NOT NULL,
+          lottery_option_id INTEGER NOT NULL,
+          amount INTEGER NOT NULL,
+          status TEXT DEFAULT 'pending', -- 'pending', 'winner', 'loser'
+          created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+          FOREIGN KEY (lottery_id) REFERENCES lotteries(id) ON DELETE CASCADE,
+          FOREIGN KEY (lottery_schedule_id) REFERENCES lottery_schedules(id) ON DELETE CASCADE,
+          FOREIGN KEY (lottery_option_id) REFERENCES lottery_options(id) ON DELETE CASCADE
+        );
+        `,
+        `
+        CREATE TABLE IF NOT EXISTS tickets (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          client_id INTEGER NOT NULL,
+          total_amount REAL NOT NULL,
+          has_winner BOOLEAN DEFAULT 0,
+          created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+          FOREIGN KEY (client_id) REFERENCES clients(id) ON DELETE CASCADE
+        );
+        `
       ];
       for (const query of queries) {
         await (this.db as SQLiteDBConnection).execute(query);
       }
     }
+    await this.ensureDefaultSettings();
   }
-  
+
   async getAll(storeName: string): Promise<any[]> {
     await this.dbReady;
     if (this.isNative && this.db) {
@@ -112,7 +163,7 @@ export class DataService {
       const placeholders = values.map(() => '?').join(', ');
       const query = `INSERT INTO ${storeName} (${keys}) VALUES (${placeholders})`;
       await (this.db as SQLiteDBConnection).run(query, values);
-  
+
       const lastIdQuery = `SELECT last_insert_rowid() as id`;
       const result = await (this.db as SQLiteDBConnection).query(lastIdQuery);
       const id = result.values?.[0]?.id;
@@ -123,7 +174,7 @@ export class DataService {
     }
     throw new Error('Failed to add record');
   }
-    
+
   async update(storeName: string, data: any): Promise<void> {
     await this.dbReady;
     if (this.isNative && this.db) {
@@ -151,6 +202,19 @@ export class DataService {
       await (this.db as IDBPDatabase).delete(storeName, id);
     } else {
       throw new Error('Database not initialized');
+    }
+  }
+
+  private async ensureDefaultSettings(): Promise<void> {
+    const query = `SELECT COUNT(*) as count FROM settings`;
+    const result = await (this.db as SQLiteDBConnection).query(query);
+    const count = result.values?.[0]?.count || 0;
+
+    if (count === 0) {
+      const insertQuery = `
+        INSERT INTO settings (id, max_bet_amount) VALUES (1, 100);
+      `;
+      await (this.db as SQLiteDBConnection).run(insertQuery);
     }
   }
 }
