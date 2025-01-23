@@ -5,6 +5,7 @@ export interface Bet {
   schedule_id: number;
   option_id: number;
   amount: number;
+  date: string;
   status: 'pending' | 'winner' | 'loser';
   created_at?: string;
 }

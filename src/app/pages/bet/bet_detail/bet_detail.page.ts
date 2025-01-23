@@ -44,6 +44,7 @@ export class BetDetailPage implements OnInit {
       schedule_id: [null, [Validators.required]],
       option_id: [null, [Validators.required]],
       amount: [0, [Validators.required, Validators.min(1)]],
+      date: [null, [Validators.required]],
       status: ['pending']
     });
   }

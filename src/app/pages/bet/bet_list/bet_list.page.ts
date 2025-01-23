@@ -5,6 +5,10 @@ import { BetService } from '../../../services/bet.service';
 import { Bet } from 'src/app/interfaces/bet.interface';
 import { TicketService } from '../../../services/ticket.service';
 import { LotteryService } from '../../../services/lottery.service';
+import { LotteryScheduleService } from '../../../services/lottery_schedule.service';
+import { Lottery } from 'src/app/interfaces/lottery.interface';
+import { LotterySchedule } from 'src/app/interfaces/lottery_schedule.interface';
+import { Ticket } from 'src/app/interfaces/ticket.interface';
 
 @Component({
   selector: 'app-bet-list',
@@ -13,8 +17,9 @@ import { LotteryService } from '../../../services/lottery.service';
 })
 export class BetListPage implements OnInit {
   bets: Bet[] = [];
-  tickets: { [key: number]: string } = {};
-  lotteries: { [key: number]: string } = {};
+  tickets: Ticket[] = [];
+  lotteries: Lottery[] = [];
+  lotterySchedules: LotterySchedule[] = [];
   searchQuery = '';
 
   constructor(
@@ -22,7 +27,8 @@ export class BetListPage implements OnInit {
     private alertController: AlertController,
     private betService: BetService,
     private ticketService: TicketService,
-    private lotteryService: LotteryService
+    private lotteryService: LotteryService,
+    private lotteryScheduleService: LotteryScheduleService
   ) {}
 
   async ngOnInit() {
@@ -38,30 +44,26 @@ export class BetListPage implements OnInit {
 
     const ticketIds = [...new Set(this.bets.map(bet => bet.ticket_id))];
     const lotteryIds = [...new Set(this.bets.map(bet => bet.lottery_id))];
+    const scheduleIds = [...new Set(this.bets.map(bet => bet.schedule_id))];
 
-    const ticketsArray = await Promise.all(ticketIds.map(async id => {
-      const ticket = await this.ticketService.getTicketById(id);
-      return ticket && ticket.id !== undefined ? { id: ticket.id, name: `Ticket #${ticket.id}` } : null;
-    }));
+    const [ticketsArray, lotteriesArray, schedulesArray] = await Promise.all([
+      Promise.all(ticketIds.map(async id => {
+        const ticket = await this.ticketService.getTicketById(id);
+        return ticket ? ticket : null;
+      })),
+      Promise.all(lotteryIds.map(async id => {
+        const lottery = await this.lotteryService.getLotteryById(id);
+        return lottery ? lottery : null;
+      })),
+      Promise.all(scheduleIds.map(async id => {
+        const schedule = await this.lotteryScheduleService.getLotteryScheduleById(id);
+        return schedule ? schedule : null;
+      }))
+    ]);
 
-    const lotteriesArray = await Promise.all(lotteryIds.map(async id => {
-      const lottery = await this.lotteryService.getLotteryById(id);
-      return lottery && lottery.id !== undefined ? { id: lottery.id, name: lottery.name } : null;
-    }));
-
-    this.tickets = ticketsArray
-      .filter((cur): cur is { id: number; name: string } => cur !== null && cur.id !== undefined)
-      .reduce((acc, cur) => {
-        acc[cur.id] = cur.name;
-        return acc;
-      }, {} as { [key: number]: string });
-
-      this.lotteries = lotteriesArray
-      .filter((cur): cur is { id: number; name: string } => cur !== null && cur.id !== undefined)
-      .reduce((acc, cur) => {
-        acc[cur.id] = cur.name;
-        return acc;
-      }, {} as { [key: number]: string });
+    this.tickets = ticketsArray.filter((t): t is Ticket => t !== null);
+    this.lotteries = lotteriesArray.filter((l): l is Lottery => l !== null);
+    this.lotterySchedules = schedulesArray.filter((s): s is LotterySchedule => s !== null);
   }
 
   search(event: any) {
@@ -101,5 +103,13 @@ export class BetListPage implements OnInit {
     });
 
     await alert.present();
+  }
+
+  getLotteryName(lotteryId: number): string {
+    return this.lotteries.find(l => l.id === lotteryId)?.name || 'Desconocida';
+  }
+
+  getScheduleTime(scheduleId: number): string {
+    return this.lotterySchedules.find(s => s.id === scheduleId)?.time || 'N/A';
   }
 }

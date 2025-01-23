@@ -29,10 +29,19 @@
     </ion-item>
 
     <ion-item>
+      <ion-label position="stacked">Fecha</ion-label>
+      <ion-datetime formControlName="date"
+                    presentation="date"
+                    display-format="YYYY-MM-DD"
+                    picker-format="YYYY-MM-DD">
+      </ion-datetime>
+    </ion-item>
+
+    <ion-item>
       <ion-label position="stacked">Horario</ion-label>
       <ion-select formControlName="schedule_id">
         <ion-select-option *ngFor="let schedule of schedules" [value]="schedule.id">
-          {{ schedule.dayOfWeek }} - {{ schedule.time }}
+          {{ schedule.time | formatTime }}
         </ion-select-option>
       </ion-select>
     </ion-item>
@@ -64,6 +73,7 @@
   <div *ngIf="mode === 'view' && bet">
     <p><strong>Ticket:</strong> #{{ bet.ticket_id }}</p>
     <p><strong>Lotería:</strong> {{ getLotteryName(bet.lottery_id) }}</p>
+    <p><strong>Fecha:</strong> {{ bet.date | date:'dd-MM-yyyy' }}</p>
     <p><strong>Horario:</strong> {{ getScheduleTime(bet.schedule_id) }}</p>
     <p><strong>Opción:</strong> {{ getOptionName(bet.option_id) }}</p>
     <p><strong>Monto:</strong> {{ bet.amount | currency }}</p>
