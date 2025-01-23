@@ -16,7 +16,7 @@
   <ion-searchbar (ionInput)="search($event)"></ion-searchbar>
   <ion-list>
     <ion-item *ngFor="let ticket of tickets | filter: searchQuery">
-      <ion-label>{{ clients[ticket.client_id].name }} - {{ ticket.total_amount | currency }} - {{ ticket.has_winner ? 'Ganador' : 'Perdedor' }}</ion-label>
+      <ion-label>{{ clients[ticket.client_id].name }} - {{ ticket.total_amount | currency }} - [{{ ticket.has_winner ? 'Ganador' : 'Perdedor' }}]</ion-label>
       <ion-buttons slot="end">
         <ion-button (click)="viewTicket(ticket.id)">
           <ion-icon slot="icon-only" name="eye-outline"></ion-icon>

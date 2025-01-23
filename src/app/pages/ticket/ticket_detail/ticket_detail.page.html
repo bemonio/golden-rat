@@ -9,7 +9,12 @@
 </ion-header>
 
 <ion-content>
-  <form *ngIf="mode === 'edit'" [formGroup]="ticketForm">
+  <!-- Loading mientras se cargan los datos -->
+  <ion-spinner *ngIf="isLoading" name="crescent"></ion-spinner>
+  <p *ngIf="isLoading">Cargando información...</p>
+
+  <!-- Formulario de edición -->
+  <form *ngIf="!isLoading && mode === 'edit'" [formGroup]="ticketForm">
     <ion-item>
       <ion-label position="stacked">Cliente</ion-label>
       <ion-select formControlName="client_id">
@@ -37,7 +42,8 @@
     </ion-item>
   </form>
 
-  <div *ngIf="mode === 'view' && ticket">
+  <!-- Vista de ticket -->
+  <div *ngIf="!isLoading && mode === 'view' && ticket">
     <p><strong>Cliente:</strong> {{ client?.name || 'Desconocido' }}</p>
     <p><strong>Alias:</strong> {{ client?.alias || 'N/A' }}</p>
     <p><strong>Teléfono:</strong> {{ client?.phone || 'N/A' }}</p>
@@ -45,21 +51,23 @@
     <p><strong>¿Ganador?:</strong> {{ ticket.has_winner ? 'Sí' : 'No' }}</p>
   </div>
 
-  <ion-title>Apuestas del Ticket</ion-title>
-  <ion-list>
+  <!-- Lista de apuestas -->
+  <ion-title *ngIf="!isLoading">Apuestas del Ticket</ion-title>
+  <ion-list *ngIf="!isLoading">
     <ion-item *ngFor="let bet of bets">
       <ion-label>
-        <p>Lotería ID: {{ bet.lottery_id }}</p>
-        <p>Horario ID: {{ bet.schedule_id }}</p>
-        <p>Opción ID: {{ bet.option_id }}</p>
-        <p>Monto: {{ bet.amount | currency }}</p>
-        <p>Estado: {{ bet.status }}</p>
+        {{ getLotteryName(bet.lottery_id) }} -
+        {{ getScheduleTime(bet.schedule_id) | formatTime }} -
+        {{ getOptionName(bet.option_id) }} -
+        {{ bet.amount | currency }} -
+        {{ bet.status }}
       </ion-label>
     </ion-item>
   </ion-list>
 </ion-content>
 
-<ion-footer *ngIf="mode === 'edit'">
+<!-- Botón de guardar -->
+<ion-footer *ngIf="!isLoading && mode === 'edit'">
   <ion-toolbar>
     <ion-button expand="block" (click)="saveTicket()" [disabled]="ticketForm.invalid">Guardar</ion-button>
   </ion-toolbar>
