@@ -16,7 +16,7 @@
   <ion-searchbar (ionInput)="search($event)"></ion-searchbar>
   <ion-list>
     <ion-item *ngFor="let lottery of lotteries | filter: searchQuery">
-      <ion-label>{{ lottery.name }} ({{ lottery.type }})</ion-label>
+      <ion-label>{{ lottery.name }} - ({{ lottery.type }})</ion-label>
       <ion-buttons slot="end">
         <ion-button (click)="viewLottery(lottery.id)">
           <ion-icon slot="icon-only" name="eye-outline"></ion-icon>

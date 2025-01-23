@@ -38,7 +38,7 @@ export class LotteryResultDetailPage implements OnInit {
       lottery_id: [null, [Validators.required]],
       lottery_schedule_id: [null, [Validators.required]],
       lottery_option_id: [null, [Validators.required]],
-      result_time: [''],
+      result_date: [null, [Validators.required]]
     });
   }
 

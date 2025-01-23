@@ -13,21 +13,20 @@
 </ion-header>
 
 <ion-content>
-  <!-- 🔹 Mostrar loading mientras se cargan los datos -->
   <ng-container *ngIf="isLoading; else content">
     <ion-spinner name="crescent"></ion-spinner>
     <p>Cargando resultados...</p>
   </ng-container>
 
-  <!-- 🔹 Mostrar la lista solo si isLoading es false -->
   <ng-template #content>
     <ion-searchbar (ionInput)="search($event)"></ion-searchbar>
     <ion-list>
       <ion-item *ngFor="let lotteryResult of lotteryResults | filter: searchQuery">
         <ion-label>
-          {{ lotteries[lotteryResult.lottery_id].name || 'Desconocida' }} - 
-          {{ lotterySchedules[lotteryResult.lottery_schedule_id].time || 'N/A' }} - 
-          {{ lotteryOptions[lotteryResult.lottery_option_id].option || 'N/A' }}
+          {{ lotteries[lotteryResult.lottery_id].name || 'Desconocida' }} -
+          {{ lotteryResult.result_date | date:'dd-MM-yyyy' }} -
+          {{ lotterySchedules[lotteryResult.lottery_schedule_id].time | formatTime }} -
+          [{{ lotteryOptions[lotteryResult.lottery_option_id].option || 'N/A' }}]
         </ion-label>
         <ion-buttons slot="end">
           <ion-button (click)="viewLotteryResult(lotteryResult.id)">
