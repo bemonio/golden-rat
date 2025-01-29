@@ -88,7 +88,7 @@ export class BetDetailPage implements OnInit {
 
   getOptionName(optionId: number): string {
     const option = this.options.find(o => o.id === optionId);
-    return option ? option.option : 'N/A';
+    return option ? option.name : 'N/A';
   }
 
   async onLotteryChange() {

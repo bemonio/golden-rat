@@ -16,7 +16,7 @@ export class LotteryDetailPage implements OnInit {
   lotteryId: number = 0;
   lotteryForm: FormGroup;
   options: LotteryOption[] = [];
-  newOption: LotteryOption = { lotteryId: 0, option: '', type: ''};
+  newOption: LotteryOption = { lotteryId: 0, name: '', type: ''};
 
   constructor(
     private route: ActivatedRoute,
@@ -83,14 +83,14 @@ export class LotteryDetailPage implements OnInit {
   }  
   
   async addLotteryOption() {
-    if (!this.newOption.option) {
+    if (!this.newOption.name) {
       alert('Por favor, completa todos los campos de la nueva opción.');
       return;
     }
     this.newOption.lotteryId = this.lotteryId;
     await this.lotteryOptionService.addLotteryOption(this.newOption);
     this.options = await this.lotteryOptionService.getLotteryOptionsByLotteryId(this.lotteryId);
-    this.newOption = { lotteryId: 0, option: '', type: ''};
+    this.newOption = { lotteryId: 0, name: '', type: ''};
   }
 
   async updateLotteryOption(option: LotteryOption) {

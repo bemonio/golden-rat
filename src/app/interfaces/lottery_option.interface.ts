@@ -1,6 +1,6 @@
 export interface LotteryOption {
   id?: number;
   lotteryId: number;
-  option: string;
+  name: string;
   type: string;
 }

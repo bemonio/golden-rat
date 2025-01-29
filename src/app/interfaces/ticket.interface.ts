@@ -4,7 +4,7 @@ export interface Ticket {
     id?: number;
     client_id: number;
     total_amount: number;
-    has_winner: boolean;
+    status: 'pending' | 'winner' | 'loser';
     created_at?: string;
     bets?: Bet[];
 }

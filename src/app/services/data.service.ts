@@ -86,7 +86,7 @@ export class DataService {
         CREATE TABLE IF NOT EXISTS lottery_options (
           id INTEGER PRIMARY KEY AUTOINCREMENT,
           lottery_id INTEGER NOT NULL,
-          option TEXT NOT NULL,
+          name TEXT NOT NULL,
           description TEXT,
           payout_multiplier REAL,
           FOREIGN KEY (lottery_id) REFERENCES lotteries(id) ON DELETE CASCADE
@@ -135,7 +135,7 @@ export class DataService {
           id INTEGER PRIMARY KEY AUTOINCREMENT,
           client_id INTEGER NOT NULL,
           total_amount REAL NOT NULL,
-          has_winner BOOLEAN DEFAULT 0,
+          status TEXT DEFAULT 'pending', -- 'pending', 'winner', 'loser'
           created_at TEXT DEFAULT CURRENT_TIMESTAMP,
           FOREIGN KEY (client_id) REFERENCES clients(id) ON DELETE CASCADE
         );

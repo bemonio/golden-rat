@@ -115,6 +115,6 @@ export class LotteryResultDetailPage implements OnInit {
   }
 
   getOptionName(id: number): string {
-    return this.lotteryOptions.find(o => o.id === id)?.option || 'N/A';
+    return this.lotteryOptions.find(o => o.id === id)?.name || 'N/A';
   }
 }

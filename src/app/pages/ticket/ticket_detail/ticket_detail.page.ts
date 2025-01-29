@@ -46,7 +46,7 @@ export class TicketDetailPage implements OnInit {
     this.ticketForm = this.fb.group({
       client_id: [null, [Validators.required]],
       total_amount: [0, [Validators.required, Validators.min(1)]],
-      has_winner: [false],
+      status: ['pending'],
     });
   }
 
@@ -162,6 +162,6 @@ export class TicketDetailPage implements OnInit {
   }
 
   getOptionName(id: number): string {
-    return this.lotteryOptions[id]?.option || 'N/A';
+    return this.lotteryOptions[id]?.name || 'N/A';
   }
 }

@@ -41,7 +41,7 @@
 
     <ion-list>
       <ion-item *ngFor="let option of options">
-        <ion-input [(ngModel)]="option.option" placeholder="Opción"></ion-input>
+        <ion-input [(ngModel)]="option.name" placeholder="Opción"></ion-input>
         <ion-buttons slot="end">
           <ion-button (click)="updateLotteryOption(option)">
             <ion-icon slot="icon-only" name="save-outline"></ion-icon>
@@ -54,7 +54,7 @@
     </ion-list>
 
     <ion-item>
-      <ion-input [(ngModel)]="newOption.option" placeholder="Nueva Opción"></ion-input>
+      <ion-input [(ngModel)]="newOption.name" placeholder="Nueva Opción"></ion-input>
       <ion-button (click)="addLotteryOption()">
         <ion-icon slot="icon-only" name="add-outline"></ion-icon>
       </ion-button>
@@ -67,7 +67,7 @@
     <ion-list>
       <ion-item *ngFor="let option of options">
         <ion-label>
-          {{ option.option }} - {{ option.type }}
+          {{ option.name }} - {{ option.type }}
         </ion-label>
       </ion-item>
     </ion-list>

@@ -37,8 +37,12 @@
     </div>
 
     <ion-item>
-      <ion-label>¿Tiene Apuestas Ganadoras?</ion-label>
-      <ion-toggle formControlName="has_winner"></ion-toggle>
+      <ion-label>Estado</ion-label>
+      <ion-select formControlName="status" interface="popover">
+        <ion-select-option value="pending">Pendiente</ion-select-option>
+        <ion-select-option value="winner">Ganador</ion-select-option>
+        <ion-select-option value="loser">Perdedor</ion-select-option>
+      </ion-select>
     </ion-item>
   </form>
 
@@ -48,7 +52,7 @@
     <p><strong>Alias:</strong> {{ client?.alias || 'N/A' }}</p>
     <p><strong>Teléfono:</strong> {{ client?.phone || 'N/A' }}</p>
     <p><strong>Monto Total:</strong> {{ ticket.total_amount | currency }}</p>
-    <p><strong>¿Ganador?:</strong> {{ ticket.has_winner ? 'Sí' : 'No' }}</p>
+    <p><strong>Estado:</strong> {{ ticket.status }}</p>
   </div>
 
   <!-- Lista de apuestas -->

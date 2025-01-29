@@ -26,7 +26,7 @@
           {{ lotteries[lotteryResult.lottery_id].name || 'Desconocida' }} -
           {{ lotteryResult.result_date | date:'dd-MM-yyyy' }} -
           {{ lotterySchedules[lotteryResult.lottery_schedule_id].time | formatTime }} -
-          [{{ lotteryOptions[lotteryResult.lottery_option_id].option || 'N/A' }}]
+          [{{ lotteryOptions[lotteryResult.lottery_option_id].name || 'N/A' }}]
         </ion-label>
         <ion-buttons slot="end">
           <ion-button (click)="viewLotteryResult(lotteryResult.id)">

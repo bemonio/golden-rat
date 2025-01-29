@@ -50,7 +50,7 @@
       <ion-label position="stacked">Opción</ion-label>
       <ion-select formControlName="option_id">
         <ion-select-option *ngFor="let option of options" [value]="option.id">
-          {{ option.option }}
+          {{ option.name }}
         </ion-select-option>
       </ion-select>
     </ion-item>

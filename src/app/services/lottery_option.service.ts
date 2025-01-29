@@ -50,7 +50,7 @@ export class LotteryOptionService {
       for (let i = 0; i <= max; i++) {
         options.push({
           lotteryId: lotteryId,
-          option: i.toString().padStart(type === '2 digits' ? 2 : 3, '0'),
+          name: i.toString().padStart(type === '2 digits' ? 2 : 3, '0'),
           type: type
         });
       }
@@ -59,7 +59,7 @@ export class LotteryOptionService {
       const animals = ['Tigre', 'Elefante', 'León'];
       return animals.map((animal) => ({
         lotteryId: lotteryId,
-        option: animal,
+        name: animal,
         type: 'animal'
       }));
     } else {
