@@ -1,0 +1,33 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Pago</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="closeModal()">Cerrar</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div class="summary">
+    <h2>Total a Pagar: {{ totalAmount | currency }}</h2>
+  </div>
+
+  <form [formGroup]="paymentForm">
+    <ion-item>
+      <ion-label>Monto Recibido</ion-label>
+      <ion-input type="number" formControlName="amountReceived"></ion-input>
+    </ion-item>
+
+    <ion-text color="danger" *ngIf="paymentForm.get('amountReceived')?.invalid && paymentForm.get('amountReceived')?.touched">
+      El monto recibido debe ser mayor o igual a {{ totalAmount | currency }}
+    </ion-text>
+  </form>
+
+  <div class="summary">
+    <h2>Vuelto: {{ change | currency }}</h2>
+  </div>
+
+  <ion-button expand="full" color="success" [disabled]="!paymentForm.valid" (click)="confirmPayment()">
+    Generar Ticket
+  </ion-button>
+</ion-content>

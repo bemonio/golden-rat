@@ -1,0 +1,73 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Punto de Venta</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form [formGroup]="ticketForm">
+    <div class="summary">
+      <h2>Total: {{ calculateTotal() | currency }}</h2>
+    </div>
+
+    <ion-item>
+      <ion-label>Cliente</ion-label>
+      <ion-select formControlName="client" interface="popover">
+        <ion-select-option *ngFor="let client of clients" [value]="client">
+          {{ client.name }} - {{ client.phone_number }}
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
+  </form>
+
+  <!-- No se usa formGroup aquí porque betForm fue eliminado -->
+  <ion-item>
+    <ion-label>Lotería</ion-label>
+    <ion-select [(ngModel)]="bet.lottery_id" (ionChange)="selectLottery()" interface="popover">
+      <ion-select-option *ngFor="let lottery of lotteries" [value]="lottery.id">
+        {{ lottery.name }}
+      </ion-select-option>
+    </ion-select>
+  </ion-item>
+
+  <ion-item *ngIf="bet.lottery_id">
+    <ion-label>Horario</ion-label>
+    <ion-select [(ngModel)]="bet.schedule_id" (ionChange)="selectSchedule()" interface="popover">
+      <ion-select-option *ngFor="let schedule of schedules" [value]="schedule.id">
+        {{ schedule.time }}
+      </ion-select-option>
+    </ion-select>
+  </ion-item>
+
+  <ion-item *ngIf="bet.schedule_id">
+    <ion-label>Opción</ion-label>
+    <ion-select [(ngModel)]="bet.option_id" interface="popover">
+      <ion-select-option *ngFor="let option of options" [value]="option.id">
+        {{ option.name }}
+      </ion-select-option>
+    </ion-select>
+  </ion-item>
+
+  <ion-item>
+    <ion-label>Monto</ion-label>
+    <ion-input type="number" [(ngModel)]="bet.amount"></ion-input>
+  </ion-item>
+
+  <ion-button expand="full" [disabled]="!bet.lottery_id || !bet.schedule_id || !bet.option_id || bet.amount <= 0" (click)="addBet()">
+    Agregar Apuesta
+  </ion-button>
+
+  <ion-list>
+    <ion-item *ngFor="let bet of bets.controls; let i = index">
+      <ion-label>
+        {{ bet.value.lottery?.name }} - {{ bet.value.schedule?.time }} - {{ bet.value.option?.name }} - {{ bet.value.amount | currency }}
+      </ion-label>
+      <ion-button color="danger" (click)="removeBet(i)">Eliminar</ion-button>
+    </ion-item>
+  </ion-list>
+
+  <ion-button expand="full" color="success" [disabled]="ticketForm.invalid" (click)="openPaymentModal()">Pagar</ion-button>
+</ion-content>

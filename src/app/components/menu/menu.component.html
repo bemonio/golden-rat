@@ -7,14 +7,19 @@
 
   <ion-content>
     <ion-list>
-      <ion-item routerLink="/bet" routerDirection="root" (click)="closeMenu()">
-        <ion-icon name="dice-outline" slot="start"></ion-icon>
-        <ion-label>Apuestas</ion-label>
+      <ion-item routerLink="/pos" routerDirection="root">
+        <ion-icon name="storefront-outline" slot="start"></ion-icon>
+        <ion-label>POS</ion-label>
       </ion-item>
 
       <ion-item routerLink="/ticket" routerDirection="root" (click)="closeMenu()">
         <ion-icon name="ticket-outline" slot="start"></ion-icon>
         <ion-label>Tickets</ion-label>
+      </ion-item>
+
+      <ion-item routerLink="/bet" routerDirection="root" (click)="closeMenu()">
+        <ion-icon name="dice-outline" slot="start"></ion-icon>
+        <ion-label>Apuestas</ion-label>
       </ion-item>
 
       <ion-item routerLink="/client" routerDirection="root" (click)="closeMenu()">

@@ -21,7 +21,7 @@ export class AppComponent implements OnInit {
 
       const isAuthenticated = await this.authService.isAuthenticated();
       if (isAuthenticated) {
-        this.router.navigate(['/bet']);
+        this.router.navigate(['/pos']);
       } else {
         this.router.navigate(['/login']);
       }

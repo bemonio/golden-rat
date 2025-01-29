@@ -9,6 +9,12 @@ const routes: Routes = [
       import('./pages/login/login.module').then((m) => m.LoginModule),
   },
   {
+    path: 'pos',
+    loadChildren: () =>
+      import('./pages/pos/pos.module').then((m) => m.PosModule),
+    canActivate: [AuthGuard],
+  },
+  {
     path: 'bet',
     loadChildren: () =>
       import('./pages/bet/bet.module').then((m) => m.BetModule),

@@ -3,19 +3,21 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { RouterModule } from '@angular/router';
-import { BetPage } from './bet.page';
+import { PosPage } from './pos.page';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { PipeModule } from 'src/app/pipes/pipe.module';
+import { PipeModule } from '../../pipes/pipe.module';
+import { PaymentModalModule } from '../../components/payment_modal/payment_modal.module';
 
 @NgModule({
-  declarations: [BetPage],
+  declarations: [PosPage],
   imports: [
     CommonModule,
     IonicModule,
     FormsModule,
     ReactiveFormsModule,
-    RouterModule.forChild([{ path: '', component: BetPage }]),
-    PipeModule
+    RouterModule.forChild([{ path: '', component: PosPage }]),
+    PipeModule,
+    PaymentModalModule
   ]
 })
-export class BetModule { }
+export class PosModule { }
