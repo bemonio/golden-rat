@@ -1,6 +1,6 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { AlertController } from '@ionic/angular';
+import { AlertController, LoadingController } from '@ionic/angular';
 import { ClientService } from '../../../services/client.service';
 import { Client } from 'src/app/interfaces/client.interface';
 
@@ -12,23 +12,34 @@ import { Client } from 'src/app/interfaces/client.interface';
 export class ClientListPage implements OnInit {
   clients: Client[] = [];
   searchQuery = '';
+  isLoading = false; // Variable de carga
 
   constructor(
     private router: Router,
     private alertController: AlertController,
-    private clientScheduleService: ClientService
+    private clientService: ClientService,
+    private loadingController: LoadingController // Importamos LoadingController
   ) {}
 
-  ngOnInit() {
-    this.loadClient();
+  async ngOnInit() {
+    await this.loadClients();
   }
 
-  ionViewWillEnter() {
-    this.loadClient();
+  async ionViewWillEnter() {
+    await this.loadClients();
   }
 
-  async loadClient() {
-    this.clients = await this.clientScheduleService.getAllClients();
+  async loadClients() {
+    this.isLoading = true;
+    const loading = await this.loadingController.create({
+      message: 'Cargando...',
+    });
+    await loading.present();
+
+    this.clients = await this.clientService.getAllClients();
+
+    this.isLoading = false;
+    await loading.dismiss();
   }
 
   search(event: any) {
@@ -60,8 +71,8 @@ export class ClientListPage implements OnInit {
           text: 'Eliminar',
           role: 'destructive',
           handler: async () => {
-            await this.clientScheduleService.deleteClient(id);
-            await this.loadClient();
+            await this.clientService.deleteClient(id);
+            await this.loadClients();
           },
         },
       ],

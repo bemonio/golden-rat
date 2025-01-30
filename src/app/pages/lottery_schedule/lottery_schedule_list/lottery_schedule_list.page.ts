@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { AlertController } from '@ionic/angular';
+import { AlertController, LoadingController } from '@ionic/angular';
 import { LotteryScheduleService } from '../../../services/lottery_schedule.service';
 import { LotterySchedule } from 'src/app/interfaces/lottery_schedule.interface';
 
@@ -13,26 +13,41 @@ export class LotteryScheduleListPage implements OnInit {
   @Input() lotteryId?: number;
   lotterySchedules: LotterySchedule[] = [];
   searchQuery = '';
+  isLoading = false; // Variable de carga
 
   constructor(
     private router: Router,
     private alertController: AlertController,
-    private lotteryScheduleService: LotteryScheduleService
+    private lotteryScheduleService: LotteryScheduleService,
+    private loadingController: LoadingController // Importamos LoadingController
   ) {}
 
-  ngOnInit() {
-    this.loadLotterySchedules();
+  async ngOnInit() {
+    await this.loadLotterySchedules();
   }
 
-  ionViewWillEnter() {
-    this.loadLotterySchedules();
+  async ionViewWillEnter() {
+    await this.loadLotterySchedules();
   }
 
   async loadLotterySchedules() {
-    if (this.lotteryId) {
-      this.lotterySchedules = await this.lotteryScheduleService.getLotterySchedulesByLotteryId(this.lotteryId);
-    } else {
-      this.lotterySchedules = await this.lotteryScheduleService.getAllLotterySchedules();
+    this.isLoading = true;
+    const loading = await this.loadingController.create({
+      message: 'Cargando horarios de lotería...',
+    });
+    await loading.present();
+
+    try {
+      if (this.lotteryId) {
+        this.lotterySchedules = await this.lotteryScheduleService.getLotterySchedulesByLotteryId(this.lotteryId);
+      } else {
+        this.lotterySchedules = await this.lotteryScheduleService.getAllLotterySchedules();
+      }
+    } catch (error) {
+      console.error('Error cargando los horarios de lotería:', error);
+    } finally {
+      this.isLoading = false;
+      await loading.dismiss();
     }
   }
 
@@ -61,7 +76,7 @@ export class LotteryScheduleListPage implements OnInit {
   async deleteLotterySchedule(id: number) {
     const alert = await this.alertController.create({
       header: 'Confirmar eliminación',
-      message: '¿Estás seguro de que deseas eliminar?',
+      message: '¿Estás seguro de que deseas eliminar este horario?',
       buttons: [
         {
           text: 'Cancelar',

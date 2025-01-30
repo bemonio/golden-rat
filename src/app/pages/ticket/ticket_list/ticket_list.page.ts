@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { AlertController } from '@ionic/angular';
+import { AlertController, LoadingController } from '@ionic/angular';
 import { TicketService } from '../../../services/ticket.service';
 import { Ticket } from 'src/app/interfaces/ticket.interface';
 import { ClientService } from '../../../services/client.service';
@@ -15,12 +15,14 @@ export class TicketListPage implements OnInit {
   tickets: Ticket[] = [];
   clients: { [key: number]: Client } = {};
   searchQuery = '';
+  isLoading = false; // Variable para controlar el estado de carga
 
   constructor(
     private router: Router,
     private alertController: AlertController,
     private ticketService: TicketService,
-    private clientService: ClientService
+    private clientService: ClientService,
+    private loadingController: LoadingController // Importamos LoadingController
   ) {}
 
   async ngOnInit() {
@@ -32,6 +34,12 @@ export class TicketListPage implements OnInit {
   }
 
   async loadTickets() {
+    this.isLoading = true;
+    const loading = await this.loadingController.create({
+      message: 'Cargando...',
+    });
+    await loading.present();
+
     this.tickets = await this.ticketService.getAllTickets();
 
     const clientIds = [...new Set(this.tickets.map(ticket => ticket.client_id))];
@@ -46,6 +54,9 @@ export class TicketListPage implements OnInit {
         acc[cur.id] = cur.client;
         return acc;
       }, {} as { [key: number]: Client });
+
+    this.isLoading = false;
+    await loading.dismiss();
   }
 
   search(event: any) {

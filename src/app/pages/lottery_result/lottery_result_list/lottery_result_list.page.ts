@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { AlertController } from '@ionic/angular';
+import { AlertController, LoadingController } from '@ionic/angular';
 import { LotteryResultService } from '../../../services/lottery_result.service';
 import { LotteryResult } from '../../../interfaces/lottery_result.interface';
 import { LotteryService } from '../../../services/lottery.service';
@@ -21,7 +21,7 @@ export class LotteryResultListPage implements OnInit {
   lotterySchedules: { [key: number]: LotterySchedule } = {};
   lotteryOptions: { [key: number]: LotteryOption } = {};
   searchQuery = '';
-  isLoading: boolean = true;
+  isLoading = false; // Variable de carga
 
   constructor(
     private router: Router,
@@ -29,7 +29,8 @@ export class LotteryResultListPage implements OnInit {
     private lotteryResultService: LotteryResultService,
     private lotteryService: LotteryService,
     private lotteryScheduleService: LotteryScheduleService,
-    private lotteryOptionService: LotteryOptionService
+    private lotteryOptionService: LotteryOptionService,
+    private loadingController: LoadingController // Importamos LoadingController
   ) {}
 
   async ngOnInit() {
@@ -41,7 +42,12 @@ export class LotteryResultListPage implements OnInit {
   }
 
   async loadLotteryResults() {
-    this.isLoading = true; // 🔹 Activar loading
+    this.isLoading = true;
+    const loading = await this.loadingController.create({
+      message: 'Cargando...',
+    });
+    await loading.present();
+
     try {
       this.lotteryResults = await this.lotteryResultService.getAllLotteryResults();
 
@@ -68,21 +74,22 @@ export class LotteryResultListPage implements OnInit {
         .filter((cur): cur is { id: number; lottery: Lottery } => cur !== null)
         .reduce((acc, cur) => ({ ...acc, [cur.id]: cur.lottery }), {} as { [key: number]: Lottery });
 
-        this.lotterySchedules = lotterySchedulesArray
+      this.lotterySchedules = lotterySchedulesArray
         .filter((cur): cur is { id: number; schedule: LotterySchedule } => cur !== null)
         .reduce((acc, cur) => ({ ...acc, [cur.id]: cur.schedule }), {} as { [key: number]: LotterySchedule });
 
-        this.lotteryOptions = lotteryOptionsArray
+      this.lotteryOptions = lotteryOptionsArray
         .filter((cur): cur is { id: number; option: LotteryOption } => cur !== null)
         .reduce((acc, cur) => ({ ...acc, [cur.id]: cur.option }), {} as { [key: number]: LotteryOption });
 
-      } catch (error) {
-      console.error('Error loading lottery results:', error);
+    } catch (error) {
+      console.error('Error cargando los resultados de lotería:', error);
     } finally {
-      this.isLoading = false; // 🔹 Desactivar loading
+      this.isLoading = false;
+      await loading.dismiss();
     }
   }
-  
+
   search(event: any) {
     this.searchQuery = event.target.value.toLowerCase();
   }

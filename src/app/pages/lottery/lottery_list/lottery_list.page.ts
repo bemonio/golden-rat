@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { AlertController } from '@ionic/angular';
+import { AlertController, LoadingController } from '@ionic/angular';
 import { LotteryService } from '../../../services/lottery.service';
 
 @Component({
@@ -11,23 +11,34 @@ import { LotteryService } from '../../../services/lottery.service';
 export class LotteryListPage implements OnInit {
   lotteries: any[] = [];
   searchQuery = '';
+  isLoading = false; // Variable de carga
 
   constructor(
     private router: Router,
     private alertController: AlertController,
-    private dbService: LotteryService
+    private lotteryService: LotteryService,
+    private loadingController: LoadingController // Importamos LoadingController
   ) {}
 
-  ngOnInit() {
-    this.loadLotteries();
+  async ngOnInit() {
+    await this.loadLotteries();
   }
 
-  ionViewWillEnter() {
-    this.loadLotteries();
+  async ionViewWillEnter() {
+    await this.loadLotteries();
   }
 
   async loadLotteries() {
-    this.lotteries = await this.dbService.getAllLotteries();
+    this.isLoading = true;
+    const loading = await this.loadingController.create({
+      message: 'Cargando...',
+    });
+    await loading.present();
+
+    this.lotteries = await this.lotteryService.getAllLotteries();
+
+    this.isLoading = false;
+    await loading.dismiss();
   }
 
   search(event: any) {
@@ -59,7 +70,7 @@ export class LotteryListPage implements OnInit {
           text: 'Eliminar',
           role: 'destructive',
           handler: async () => {
-            await this.dbService.deleteLottery(id);
+            await this.lotteryService.deleteLottery(id);
             await this.loadLotteries();
           },
         },

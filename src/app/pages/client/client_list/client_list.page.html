@@ -14,9 +14,17 @@
 
 <ion-content>
   <ion-searchbar (ionInput)="search($event)"></ion-searchbar>
-  <ion-list>
+
+  <!-- Mostrar un loading mientras los datos cargan -->
+  <ion-spinner *ngIf="isLoading" name="crescent"></ion-spinner>
+
+  <ion-list *ngIf="!isLoading">
     <ion-item *ngFor="let client of clients | filter: searchQuery">
-      <ion-label>{{ client.alias }} - {{ client.name }} - {{ client.phone }}</ion-label>
+      <ion-label>
+        {{ client?.alias }} -
+        {{ client?.name }} -
+        {{ client?.phone }}
+      </ion-label>
       <ion-buttons slot="end">
         <ion-button (click)="viewClient(client.id)">
           <ion-icon slot="icon-only" name="eye-outline"></ion-icon>

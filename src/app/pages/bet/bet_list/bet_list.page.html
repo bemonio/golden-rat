@@ -14,7 +14,11 @@
 
 <ion-content>
   <ion-searchbar (ionInput)="search($event)"></ion-searchbar>
-  <ion-list>
+
+  <!-- Mostrar un loading mientras los datos cargan -->
+  <ion-spinner *ngIf="isLoading" name="crescent"></ion-spinner>
+
+  <ion-list *ngIf="!isLoading">
     <ion-item *ngFor="let bet of bets | filter: searchQuery">
       <ion-label>
         Ticket #{{ bet.ticket_id }} -

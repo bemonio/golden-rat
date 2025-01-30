@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { AlertController } from '@ionic/angular';
+import { AlertController, LoadingController } from '@ionic/angular';
 import { BetService } from '../../../services/bet.service';
 import { Bet } from 'src/app/interfaces/bet.interface';
 import { TicketService } from '../../../services/ticket.service';
@@ -21,6 +21,7 @@ export class BetListPage implements OnInit {
   lotteries: Lottery[] = [];
   lotterySchedules: LotterySchedule[] = [];
   searchQuery = '';
+  isLoading = false; // Variable de carga
 
   constructor(
     private router: Router,
@@ -28,7 +29,8 @@ export class BetListPage implements OnInit {
     private betService: BetService,
     private ticketService: TicketService,
     private lotteryService: LotteryService,
-    private lotteryScheduleService: LotteryScheduleService
+    private lotteryScheduleService: LotteryScheduleService,
+    private loadingController: LoadingController // Importamos LoadingController
   ) {}
 
   async ngOnInit() {
@@ -40,6 +42,12 @@ export class BetListPage implements OnInit {
   }
 
   async loadBets() {
+    this.isLoading = true;
+    const loading = await this.loadingController.create({
+      message: 'Cargando...',
+    });
+    await loading.present();
+
     this.bets = await this.betService.getAllBets();
 
     const ticketIds = [...new Set(this.bets.map(bet => bet.ticket_id))];
@@ -64,6 +72,9 @@ export class BetListPage implements OnInit {
     this.tickets = ticketsArray.filter((t): t is Ticket => t !== null);
     this.lotteries = lotteriesArray.filter((l): l is Lottery => l !== null);
     this.lotterySchedules = schedulesArray.filter((s): s is LotterySchedule => s !== null);
+
+    this.isLoading = false;
+    await loading.dismiss();
   }
 
   search(event: any) {
