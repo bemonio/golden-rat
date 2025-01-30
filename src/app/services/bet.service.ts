@@ -34,4 +34,9 @@ export class BetService {
     const allBets = await this.getAllBets();
     return allBets.filter(bet => bet.ticket_id === ticket_id);
   }
+
+  async getBetsByLotteryAndDate(lotteryId: number, date: string, scheduleId: number): Promise<Bet[]> {
+    const allBets: Bet[] = await this.getAllBets();
+    return allBets.filter(bet => bet.lottery_id === lotteryId && bet.date === date && bet.schedule_id === scheduleId);
+  }
 }
