@@ -2,15 +2,17 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { BetService } from '../../../services/bet.service';
-import { Bet } from 'src/app/interfaces/bet.interface';
+import { Bet } from '../../../interfaces/bet.interface';
 import { TicketService } from '../../../services/ticket.service';
 import { LotteryService } from '../../../services/lottery.service';
 import { LotteryScheduleService } from '../../../services/lottery_schedule.service';
 import { LotteryOptionService } from '../../../services/lottery_option.service';
-import { Ticket } from 'src/app/interfaces/ticket.interface';
-import { Lottery } from 'src/app/interfaces/lottery.interface';
-import { LotterySchedule } from 'src/app/interfaces/lottery_schedule.interface';
-import { LotteryOption } from 'src/app/interfaces/lottery_option.interface';
+import { Ticket } from '../../../interfaces/ticket.interface';
+import { Lottery } from '../../../interfaces/lottery.interface';
+import { LotterySchedule } from '../../../interfaces/lottery_schedule.interface';
+import { LotteryOption } from '../../../interfaces/lottery_option.interface';
+import { DatePickerModalComponent } from '../../../components/datepicker_modal/datepicker_modal.component';
+import { ModalController } from '@ionic/angular';
 
 @Component({
   selector: 'app-bet-detail',
@@ -36,7 +38,8 @@ export class BetDetailPage implements OnInit {
     private ticketService: TicketService,
     private lotteryService: LotteryService,
     private scheduleService: LotteryScheduleService,
-    private optionService: LotteryOptionService
+    private optionService: LotteryOptionService,
+    private modalController: ModalController
   ) {
     this.betForm = this.fb.group({
       ticket_id: [null, [Validators.required]],
@@ -50,6 +53,17 @@ export class BetDetailPage implements OnInit {
   }
 
   async ngOnInit() {
+    this.bet = this.bet || {
+      ticket_id: 0,
+      lottery_id: 0,
+      schedule_id: 0,
+      option_id: 0,
+      amount: 0,
+      date: new Date().toISOString().split('T')[0],
+      status: 'pending',
+      created_at: new Date().toISOString()
+    };
+
     this.tickets = await this.ticketService.getAllTickets();
     this.lotteries = await this.lotteryService.getAllLotteries();
 
@@ -118,5 +132,20 @@ export class BetDetailPage implements OnInit {
     }
 
     this.router.navigate(['/bet']);
+  }
+
+  async openDatePicker() {
+    if (!this.bet) return;
+    const modal = await this.modalController.create({
+      component: DatePickerModalComponent,
+      componentProps: { selectedDate: this.bet.date || new Date().toISOString().split('T')[0] }
+    });
+
+    await modal.present();
+    const { data } = await modal.onWillDismiss();
+
+    if (data?.confirmed) {
+      this.bet.date = data.date;
+    }
   }
 }

@@ -11,13 +11,11 @@
 </ion-header>
 
 <ion-content>
-  <!-- 🔹 Mostrar loading mientras se cargan los datos -->
   <ng-container *ngIf="isLoading; else content">
     <ion-spinner name="crescent"></ion-spinner>
-    <p>Cargando información...</p>
+    <p>Cargando...</p>
   </ng-container>
 
-  <!-- 🔹 Renderizar el contenido solo si isLoading es false -->
   <ng-template #content>
     <form *ngIf="mode === 'edit'" [formGroup]="lotteryResultForm">
       <ion-item>
@@ -29,17 +27,16 @@
         </ion-select>
       </ion-item>
 
-      <ion-item>
+      <ion-item (click)="openDatePicker()">
         <ion-label position="stacked">Fecha</ion-label>
-        <ion-datetime formControlName="date"
-                      presentation="date"
-                      display-format="YYYY-MM-DD"
-                      picker-format="YYYY-MM-DD">
-        </ion-datetime>
+        <ion-input readonly formControlName="date"></ion-input>
+        <ion-button fill="clear" slot="end">
+          <ion-icon name="calendar-outline" size="large"></ion-icon>
+        </ion-button>
       </ion-item>
 
       <ion-item>
-        <ion-label position="stacked">Hora</ion-label>
+        <ion-label position="stacked">Horario</ion-label>
         <ion-select formControlName="lottery_schedule_id">
           <ion-select-option *ngFor="let schedule of lotterySchedules" [value]="schedule.id">
             {{ schedule.time | formatTime }}
@@ -60,7 +57,7 @@
     <div *ngIf="mode === 'view' && lotteryResult">
       <p><strong>Lotería:</strong> {{ getLotteryName(lotteryResult.lottery_id) }}</p>
       <p><strong>Fecha:</strong> {{ lotteryResult.date | date:'dd-MM-yyyy' }}</p>
-      <p><strong>Hora:</strong> {{ getScheduleTime(lotteryResult.lottery_schedule_id) | formatTime }}</p>
+      <p><strong>Horario:</strong> {{ getScheduleTime(lotteryResult.lottery_schedule_id) | formatTime }}</p>
       <p><strong>Resultado:</strong> {{ getOptionName(lotteryResult.lottery_option_id) }}</p>
     </div>
   </ng-template>
@@ -68,6 +65,8 @@
 
 <ion-footer *ngIf="mode === 'edit'">
   <ion-toolbar>
-    <ion-button expand="block" (click)="saveLotteryResult()" [disabled]="lotteryResultForm.invalid">Guardar</ion-button>
+    <ion-button expand="block" (click)="saveLotteryResult()" [disabled]="lotteryResultForm.invalid">
+      Guardar
+    </ion-button>
   </ion-toolbar>
 </ion-footer>

@@ -9,6 +9,8 @@ import { LotteryResult } from '../../../interfaces/lottery_result.interface';
 import { Lottery } from '../../../interfaces/lottery.interface';
 import { LotterySchedule } from '../../../interfaces/lottery_schedule.interface';
 import { LotteryOption } from '../../../interfaces/lottery_option.interface';
+import { ModalController } from '@ionic/angular';
+import { DatePickerModalComponent } from 'src/app/components/datepicker_modal/datepicker_modal.component';
 
 @Component({
   selector: 'app-lottery-result-detail',
@@ -18,8 +20,16 @@ import { LotteryOption } from '../../../interfaces/lottery_option.interface';
 export class LotteryResultDetailPage implements OnInit {
   mode: 'view' | 'edit' = 'view';
   lotteryResultId: number = 0;
+  lotteryResult: LotteryResult = {
+    id: 0,
+    lottery_id: 0,
+    lottery_schedule_id: 0,
+    lottery_option_id: 0,
+    date: new Date().toISOString().split('T')[0],
+    created_at: new Date().toISOString()
+  };
+
   lotteryResultForm: FormGroup;
-  lotteryResult: LotteryResult | null = null;
   lotteries: Lottery[] = [];
   lotterySchedules: LotterySchedule[] = [];
   lotteryOptions: LotteryOption[] = [];
@@ -32,7 +42,8 @@ export class LotteryResultDetailPage implements OnInit {
     private lotteryResultService: LotteryResultService,
     private lotteryService: LotteryService,
     private scheduleService: LotteryScheduleService,
-    private optionService: LotteryOptionService
+    private optionService: LotteryOptionService,
+    private modalController: ModalController
   ) {
     this.lotteryResultForm = this.fb.group({
       lottery_id: [null, [Validators.required]],
@@ -44,22 +55,19 @@ export class LotteryResultDetailPage implements OnInit {
 
   async ngOnInit() {
     this.isLoading = true;
-
     try {
-      // Cargar listas generales
       [this.lotteries, this.lotterySchedules, this.lotteryOptions] = await Promise.all([
         this.lotteryService.getAllLotteries(),
         this.scheduleService.getAllLotterySchedules(),
         this.optionService.getAllLotteryOptions(),
       ]);
 
-      // Obtener ID de la URL
       const idParam = this.route.snapshot.paramMap.get('id');
       if (this.route.snapshot.url[0].path === 'add') {
         this.mode = 'edit';
       } else if (idParam) {
         this.lotteryResultId = Number(idParam);
-        this.mode = this.route.snapshot.url[1].path as 'view' | 'edit';
+        this.mode = this.route.snapshot.url[1]?.path as 'view' | 'edit' || 'view';
         await this.loadLotteryResultData();
       }
     } catch (error) {
@@ -72,9 +80,9 @@ export class LotteryResultDetailPage implements OnInit {
   async loadLotteryResultData() {
     try {
       this.isLoading = true;
-      this.lotteryResult = await this.lotteryResultService.getLotteryResultById(this.lotteryResultId) ?? null;
-
-      if (this.lotteryResult) {
+      const result = await this.lotteryResultService.getLotteryResultById(this.lotteryResultId);
+      if (result) {
+        this.lotteryResult = result;
         this.lotteryResultForm.patchValue(this.lotteryResult);
       }
     } catch (error) {
@@ -116,5 +124,19 @@ export class LotteryResultDetailPage implements OnInit {
 
   getOptionName(id: number): string {
     return this.lotteryOptions.find(o => o.id === id)?.name || 'N/A';
+  }
+
+  async openDatePicker() {
+    const modal = await this.modalController.create({
+      component: DatePickerModalComponent,
+      componentProps: { selectedDate: this.lotteryResultForm.get('date')?.value }
+    });
+
+    await modal.present();
+    const { data } = await modal.onWillDismiss();
+
+    if (data?.confirmed) {
+      this.lotteryResultForm.patchValue({ date: data.date });
+    }
   }
 }

@@ -6,7 +6,9 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { BetListPage } from './bet_list/bet_list.page';
 import { BetDetailPage } from './bet_detail/bet_detail.page';
-import { PipeModule } from 'src/app/pipes/pipe.module';
+import { PipeModule } from '../../pipes/pipe.module';
+import { DatePickerModalModule } from '../../components/datepicker_modal/datepicker_modal.module';
+
 
 const routes: Routes = [
   { path: '', component: BetListPage },
@@ -22,7 +24,8 @@ const routes: Routes = [
     ReactiveFormsModule,
     IonicModule,
     RouterModule.forChild(routes),
-    PipeModule
+    PipeModule,
+    DatePickerModalModule
   ],
   declarations: [
     BetListPage,

@@ -10,6 +10,7 @@ import { AlertController, ModalController } from '@ionic/angular';
 import { Ticket } from '../../interfaces/ticket.interface';
 import { Bet } from '../../interfaces/bet.interface';
 import { PaymentModalComponent } from '../../components/payment_modal/payment_modal.component';
+import { DatePickerModalComponent } from '../../components/datepicker_modal/datepicker_modal.component';
 
 @Component({
   selector: 'app-pos',
@@ -149,5 +150,19 @@ export class PosPage implements OnInit {
       buttons: ['OK']
     });
     await alert.present();
+  }
+
+  async openDatePicker() {
+    const modal = await this.modalController.create({
+      component: DatePickerModalComponent,
+      componentProps: { selectedDate: this.bet.date }
+    });
+
+    await modal.present();
+    const { data } = await modal.onWillDismiss();
+
+    if (data?.confirmed) {
+      this.bet.date = data.date;
+    }
   }
 }

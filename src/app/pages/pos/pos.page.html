@@ -33,11 +33,19 @@
     </ion-select>
   </ion-item>
 
+  <ion-item (click)="openDatePicker()">
+    <ion-label position="stacked">Fecha</ion-label>
+    <ion-input readonly [value]="bet.date"></ion-input>
+    <ion-button fill="clear" slot="end">
+      <ion-icon name="calendar-outline" size="large"></ion-icon>
+    </ion-button>
+  </ion-item>
+
   <ion-item *ngIf="bet.lottery_id">
     <ion-label>Horario</ion-label>
     <ion-select [(ngModel)]="bet.schedule_id" (ionChange)="selectSchedule()" interface="popover">
       <ion-select-option *ngFor="let schedule of schedules" [value]="schedule.id">
-        {{ schedule.time }}
+        {{ schedule.time | formatTime }}
       </ion-select-option>
     </ion-select>
   </ion-item>
@@ -63,7 +71,7 @@
   <ion-list>
     <ion-item *ngFor="let bet of bets.controls; let i = index">
       <ion-label>
-        {{ bet.value.lottery?.name }} - {{ bet.value.schedule?.time }} - {{ bet.value.option?.name }} - {{ bet.value.amount | currency }}
+        {{ bet.value.lottery?.name }} - {{ bet.value.date | date:'dd-MM-yyyy' }} - {{ bet.value.schedule?.time | formatTime }} - {{ bet.value.option?.name }} - {{ bet.value.amount | currency }}
       </ion-label>
       <ion-button color="danger" (click)="removeBet(i)">Eliminar</ion-button>
     </ion-item>
