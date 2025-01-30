@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SettingsService } from '../../services/settings.service';
 import { Settings } from '../../interfaces/settings.interface';
 
@@ -8,29 +9,48 @@ import { Settings } from '../../interfaces/settings.interface';
   styleUrls: ['./settings.page.scss'],
 })
 export class SettingsPage implements OnInit {
-  settings: Settings = { id: 1, max_bet_amount: 100 };
+  settingsForm: FormGroup;
+  isLoading = true;
 
   constructor(
-    private settingsService: SettingsService
-  ) {}
+    private settingsService: SettingsService,
+    private fb: FormBuilder
+  ) {
+    this.settingsForm = this.fb.group({
+      max_bet_amount: [100, [Validators.required, Validators.min(1)]]
+    });
+  }
 
   async ngOnInit() {
+    this.isLoading = true;
     let savedSettings = await this.settingsService.getSettingsById(1);
 
     if (!savedSettings) {
-      await this.settingsService.addSettings(this.settings);
+      const defaultSettings: Settings = { id: 1, max_bet_amount: 100 };
+      await this.settingsService.addSettings(defaultSettings);
       savedSettings = await this.settingsService.getSettingsById(1);
     }
 
-    this.settings = savedSettings || this.settings;
+    if (savedSettings) {
+      this.settingsForm.patchValue(savedSettings);
+    }
+
+    this.isLoading = false;
   }
 
   async saveConfig() {
+    if (this.settingsForm.invalid) return;
+
+    const updatedSettings: Settings = {
+      id: 1,
+      max_bet_amount: this.settingsForm.value.max_bet_amount
+    };
+
     const existingSettings = await this.settingsService.getSettingsById(1);
     if (existingSettings) {
-      await this.settingsService.updateSettings(this.settings);
+      await this.settingsService.updateSettings(updatedSettings);
     } else {
-      await this.settingsService.addSettings(this.settings);
+      await this.settingsService.addSettings(updatedSettings);
     }
   }
 }

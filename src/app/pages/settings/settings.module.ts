@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { RouterModule } from '@angular/router';
 import { SettingsPage } from './settings.page';
-import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [SettingsPage],
@@ -12,6 +12,7 @@ import { FormsModule } from '@angular/forms';
     CommonModule,
     IonicModule,
     FormsModule,
+    ReactiveFormsModule,
     RouterModule.forChild([{ path: '', component: SettingsPage }])
   ]
 })
