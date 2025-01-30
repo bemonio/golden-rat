@@ -1,0 +1,21 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Seleccionar Fecha</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="closeModal(false)">Cancelar</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-item>
+    <ion-datetime [value]="selectedDate"
+                  (ionChange)="confirmDate($event)"
+                  presentation="date"
+                  display-format="YYYY-MM-DD"
+                  picker-format="YYYY-MM-DD">
+    </ion-datetime>
+  </ion-item>
+
+  <ion-button expand="full" color="success" (click)="closeModal(true)">Aceptar</ion-button>
+</ion-content>
