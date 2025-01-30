@@ -10,7 +10,7 @@ import { Lottery } from '../../../interfaces/lottery.interface';
 import { LotterySchedule } from '../../../interfaces/lottery_schedule.interface';
 import { LotteryOption } from '../../../interfaces/lottery_option.interface';
 import { ModalController } from '@ionic/angular';
-import { DatePickerModalComponent } from 'src/app/components/datepicker_modal/datepicker_modal.component';
+import { DatePickerModalComponent } from '../../../components/datepicker_modal/datepicker_modal.component';
 
 @Component({
   selector: 'app-lottery-result-detail',

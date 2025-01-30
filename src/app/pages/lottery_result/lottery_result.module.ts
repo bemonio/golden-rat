@@ -7,7 +7,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { LotteryResultListPage } from './lottery_result_list/lottery_result_list.page';
 import { LotteryResultDetailPage } from './lottery_result_detail/lottery_result_detail.page';
 import { PipeModule } from '../../pipes/pipe.module';
-import { DatePickerModalModule } from 'src/app/components/datepicker_modal/datepicker_modal.module';
+import { DatePickerModalModule } from '../../components/datepicker_modal/datepicker_modal.module';
 
 const routes: Routes = [
   { path: '', component: LotteryResultListPage },
