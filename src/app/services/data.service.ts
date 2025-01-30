@@ -108,7 +108,7 @@ export class DataService {
           lottery_id INTEGER NOT NULL,
           lottery_schedule_id INTEGER NOT NULL,
           lottery_option_id INTEGER NOT NULL,
-          result_date TEXT NOT NULL,
+          date TEXT NOT NULL,
           created_at TEXT DEFAULT CURRENT_TIMESTAMP,
           FOREIGN KEY (lottery_id) REFERENCES lotteries(id) ON DELETE CASCADE
           FOREIGN KEY (lottery_schedule_id) REFERENCES lottery_schedules(id) ON DELETE CASCADE,
