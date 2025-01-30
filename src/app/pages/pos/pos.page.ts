@@ -121,17 +121,25 @@ export class PosPage implements OnInit {
   }
 
   async generateTicket() {
-    if (!this.ticketForm.valid) return;
+    const cleanedBets = this.bets.controls.map(bet => ({
+      ticket_id: 0,
+      lottery_id: bet.value.lottery_id,
+      schedule_id: bet.value.schedule_id,
+      option_id: bet.value.option_id,
+      amount: bet.value.amount,
+      date: bet.value.date,
+      status: bet.value.status,
+      created_at: bet.value.created_at
+    }));
 
     const ticket: Ticket = {
       client_id: this.ticketForm.value.client.id,
       total_amount: this.calculateTotal(),
       status: 'pending',
-      created_at: new Date().toISOString(),
-      bets: this.ticketForm.value.bets || []
+      created_at: new Date().toISOString()
     };
 
-    await this.ticketService.addTicket(ticket, ticket.bets ?? []);
+    await this.ticketService.addTicket(ticket, cleanedBets);
     this.ticketForm.reset();
     this.bets.clear();
 
