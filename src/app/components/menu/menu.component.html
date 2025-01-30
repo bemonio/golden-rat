@@ -12,6 +12,11 @@
         <ion-label>POS</ion-label>
       </ion-item>
 
+      <ion-item routerLink="/report" routerDirection="forward" (click)="closeMenu()">
+        <ion-icon name="bar-chart-outline" slot="start"></ion-icon>
+        <ion-label>Reportes</ion-label>
+      </ion-item>
+
       <ion-item routerLink="/ticket" routerDirection="root" (click)="closeMenu()">
         <ion-icon name="ticket-outline" slot="start"></ion-icon>
         <ion-label>Tickets</ion-label>

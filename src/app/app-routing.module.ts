@@ -15,6 +15,12 @@ const routes: Routes = [
     canActivate: [AuthGuard],
   },
   {
+    path: 'report',
+    loadChildren: () =>
+      import('./pages/report/report.module').then((m) => m.ReportModule),
+    canActivate: [AuthGuard],
+  },
+  {
     path: 'bet',
     loadChildren: () =>
       import('./pages/bet/bet.module').then((m) => m.BetModule),
