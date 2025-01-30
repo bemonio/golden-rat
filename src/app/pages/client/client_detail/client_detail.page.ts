@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ClientService } from '../../../services/client.service';
-import { Client } from 'src/app/interfaces/client.interface';
+import { Client } from '../../../interfaces/client.interface';
 
 @Component({
   selector: 'app-client-detail',

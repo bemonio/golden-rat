@@ -11,13 +11,13 @@ import { LotteryService } from '../../../services/lottery.service';
 export class LotteryListPage implements OnInit {
   lotteries: any[] = [];
   searchQuery = '';
-  isLoading = false; // Variable de carga
+  isLoading = false;
 
   constructor(
     private router: Router,
     private alertController: AlertController,
     private lotteryService: LotteryService,
-    private loadingController: LoadingController // Importamos LoadingController
+    private loadingController: LoadingController
   ) {}
 
   async ngOnInit() {

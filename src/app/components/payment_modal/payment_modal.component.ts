@@ -26,7 +26,6 @@ export class PaymentModalComponent implements OnInit {
       this.totalAmount = 0;
     }
 
-    // Configurar validación inicial
     this.paymentForm.get('amountReceived')?.setValidators([
       Validators.required, 
       Validators.min(this.totalAmount)

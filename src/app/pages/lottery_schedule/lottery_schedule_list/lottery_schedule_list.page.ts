@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AlertController, LoadingController } from '@ionic/angular';
 import { LotteryScheduleService } from '../../../services/lottery_schedule.service';
-import { LotterySchedule } from 'src/app/interfaces/lottery_schedule.interface';
+import { LotterySchedule } from '../../../interfaces/lottery_schedule.interface';
 
 @Component({
   selector: 'app-lottery-schedule-list',
@@ -13,13 +13,13 @@ export class LotteryScheduleListPage implements OnInit {
   @Input() lotteryId?: number;
   lotterySchedules: LotterySchedule[] = [];
   searchQuery = '';
-  isLoading = false; // Variable de carga
+  isLoading = false;
 
   constructor(
     private router: Router,
     private alertController: AlertController,
     private lotteryScheduleService: LotteryScheduleService,
-    private loadingController: LoadingController // Importamos LoadingController
+    private loadingController: LoadingController
   ) {}
 
   async ngOnInit() {

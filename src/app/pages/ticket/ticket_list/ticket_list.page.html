@@ -15,7 +15,6 @@
 <ion-content>
   <ion-searchbar (ionInput)="search($event)"></ion-searchbar>
 
-  <!-- Mostrar un loading mientras los datos cargan -->
   <ion-spinner *ngIf="isLoading" name="crescent"></ion-spinner>
 
   <ion-list *ngIf="!isLoading">

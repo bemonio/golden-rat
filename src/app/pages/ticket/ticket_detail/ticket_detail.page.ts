@@ -7,9 +7,9 @@ import { ClientService } from '../../../services/client.service';
 import { LotteryService } from '../../../services/lottery.service';
 import { LotteryScheduleService } from '../../../services/lottery_schedule.service';
 import { LotteryOptionService } from '../../../services/lottery_option.service';
-import { Ticket } from 'src/app/interfaces/ticket.interface';
-import { Bet } from 'src/app/interfaces/bet.interface';
-import { Client } from 'src/app/interfaces/client.interface';
+import { Ticket } from '../../../interfaces/ticket.interface';
+import { Bet } from '../../../interfaces/bet.interface';
+import { Client } from '../../../interfaces/client.interface';
 import { Lottery } from '../../../interfaces/lottery.interface';
 import { LotterySchedule } from '../../../interfaces/lottery_schedule.interface';
 import { LotteryOption } from '../../../interfaces/lottery_option.interface';
@@ -77,12 +77,10 @@ export class TicketDetailPage implements OnInit {
         this.client = (await this.clientService.getClientById(this.ticket?.client_id ?? 0)) ?? null;
         this.loadTicketForm();
 
-        // Obtener los IDs únicos de las apuestas
         const lotteryIds = [...new Set(this.bets.map(bet => bet.lottery_id))];
         const scheduleIds = [...new Set(this.bets.map(bet => bet.schedule_id))];
         const optionIds = [...new Set(this.bets.map(bet => bet.option_id))];
 
-        // Cargar los datos de loterías, horarios y opciones
         const [lotteriesArray, schedulesArray, optionsArray] = await Promise.all([
           Promise.all(lotteryIds.map(async id => {
             const lottery = await this.lotteryService.getLotteryById(id);
@@ -98,7 +96,6 @@ export class TicketDetailPage implements OnInit {
           }))
         ]);
 
-        // Convertir los arrays en objetos para acceso rápido
         this.lotteries = lotteriesArray
           .filter((cur): cur is { id: number; lottery: Lottery } => cur !== null)
           .reduce((acc, cur) => ({ ...acc, [cur.id]: cur.lottery }), {} as { [key: number]: Lottery });

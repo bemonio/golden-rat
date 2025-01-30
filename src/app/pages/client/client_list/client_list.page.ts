@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AlertController, LoadingController } from '@ionic/angular';
 import { ClientService } from '../../../services/client.service';
-import { Client } from 'src/app/interfaces/client.interface';
+import { Client } from '../../../interfaces/client.interface';
 
 @Component({
   selector: 'app-client-list',
@@ -12,13 +12,13 @@ import { Client } from 'src/app/interfaces/client.interface';
 export class ClientListPage implements OnInit {
   clients: Client[] = [];
   searchQuery = '';
-  isLoading = false; // Variable de carga
+  isLoading = false;
 
   constructor(
     private router: Router,
     private alertController: AlertController,
     private clientService: ClientService,
-    private loadingController: LoadingController // Importamos LoadingController
+    private loadingController: LoadingController
   ) {}
 
   async ngOnInit() {

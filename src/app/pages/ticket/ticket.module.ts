@@ -6,7 +6,7 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { TicketListPage } from './ticket_list/ticket_list.page';
 import { TicketDetailPage } from './ticket_detail/ticket_detail.page';
-import { PipeModule } from 'src/app/pipes/pipe.module';
+import { PipeModule } from '../../pipes/pipe.module';
 
 const routes: Routes = [
   { path: '', component: TicketListPage },

@@ -2,13 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AlertController, LoadingController } from '@ionic/angular';
 import { BetService } from '../../../services/bet.service';
-import { Bet } from 'src/app/interfaces/bet.interface';
+import { Bet } from '../../../interfaces/bet.interface';
 import { TicketService } from '../../../services/ticket.service';
 import { LotteryService } from '../../../services/lottery.service';
 import { LotteryScheduleService } from '../../../services/lottery_schedule.service';
-import { Lottery } from 'src/app/interfaces/lottery.interface';
-import { LotterySchedule } from 'src/app/interfaces/lottery_schedule.interface';
-import { Ticket } from 'src/app/interfaces/ticket.interface';
+import { Lottery } from '../../../interfaces/lottery.interface';
+import { LotterySchedule } from '../../../interfaces/lottery_schedule.interface';
+import { Ticket } from '../../../interfaces/ticket.interface';
 
 @Component({
   selector: 'app-bet-list',
@@ -21,7 +21,7 @@ export class BetListPage implements OnInit {
   lotteries: Lottery[] = [];
   lotterySchedules: LotterySchedule[] = [];
   searchQuery = '';
-  isLoading = false; // Variable de carga
+  isLoading = false;
 
   constructor(
     private router: Router,
@@ -30,7 +30,7 @@ export class BetListPage implements OnInit {
     private ticketService: TicketService,
     private lotteryService: LotteryService,
     private lotteryScheduleService: LotteryScheduleService,
-    private loadingController: LoadingController // Importamos LoadingController
+    private loadingController: LoadingController
   ) {}
 
   async ngOnInit() {

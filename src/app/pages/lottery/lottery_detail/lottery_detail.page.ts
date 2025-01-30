@@ -3,8 +3,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AlertController } from '@ionic/angular';
 import { LotteryService } from '../../../services/lottery.service';
-import { LotteryOptionService } from 'src/app/services/lottery_option.service';
-import { LotteryOption } from 'src/app/interfaces/lottery_option.interface';
+import { LotteryOptionService } from '../../../services/lottery_option.service';
+import { LotteryOption } from '../../../interfaces/lottery_option.interface';
 
 @Component({
   selector: 'app-lottery-detail',

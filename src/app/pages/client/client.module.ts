@@ -6,7 +6,7 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { ClientListPage } from './client_list/client_list.page';
 import { ClientDetailPage } from './client_detail/client_detail.page';
-import { PipeModule } from 'src/app/pipes/pipe.module';
+import { PipeModule } from '../../pipes/pipe.module';
 
 const routes: Routes = [
   { path: '', component: ClientListPage },

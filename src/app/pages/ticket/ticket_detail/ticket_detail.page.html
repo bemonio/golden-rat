@@ -9,11 +9,9 @@
 </ion-header>
 
 <ion-content>
-  <!-- Loading mientras se cargan los datos -->
   <ion-spinner *ngIf="isLoading" name="crescent"></ion-spinner>
-  <p *ngIf="isLoading">Cargando información...</p>
+  <p *ngIf="isLoading">Cargando...</p>
 
-  <!-- Formulario de edición -->
   <form *ngIf="!isLoading && mode === 'edit'" [formGroup]="ticketForm">
     <ion-item>
       <ion-label position="stacked">Cliente</ion-label>
@@ -46,7 +44,6 @@
     </ion-item>
   </form>
 
-  <!-- Vista de ticket -->
   <div *ngIf="!isLoading && mode === 'view' && ticket">
     <p><strong>Cliente:</strong> {{ client?.name || 'Desconocido' }}</p>
     <p><strong>Alias:</strong> {{ client?.alias || 'N/A' }}</p>
@@ -55,7 +52,6 @@
     <p><strong>Estado:</strong> {{ ticket.status }}</p>
   </div>
 
-  <!-- Lista de apuestas -->
   <ion-title *ngIf="!isLoading">Apuestas del Ticket</ion-title>
   <ion-list *ngIf="!isLoading">
     <ion-item *ngFor="let bet of bets">
@@ -70,7 +66,6 @@
   </ion-list>
 </ion-content>
 
-<!-- Botón de guardar -->
 <ion-footer *ngIf="!isLoading && mode === 'edit'">
   <ion-toolbar>
     <ion-button expand="block" (click)="saveTicket()" [disabled]="ticketForm.invalid">Guardar</ion-button>

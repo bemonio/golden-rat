@@ -2,9 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AlertController, LoadingController } from '@ionic/angular';
 import { TicketService } from '../../../services/ticket.service';
-import { Ticket } from 'src/app/interfaces/ticket.interface';
+import { Ticket } from '../../../interfaces/ticket.interface';
 import { ClientService } from '../../../services/client.service';
-import { Client } from 'src/app/interfaces/client.interface';
+import { Client } from '../../../interfaces/client.interface';
 
 @Component({
   selector: 'app-ticket-list',
@@ -15,14 +15,14 @@ export class TicketListPage implements OnInit {
   tickets: Ticket[] = [];
   clients: { [key: number]: Client } = {};
   searchQuery = '';
-  isLoading = false; // Variable para controlar el estado de carga
+  isLoading = false;
 
   constructor(
     private router: Router,
     private alertController: AlertController,
     private ticketService: TicketService,
     private clientService: ClientService,
-    private loadingController: LoadingController // Importamos LoadingController
+    private loadingController: LoadingController
   ) {}
 
   async ngOnInit() {

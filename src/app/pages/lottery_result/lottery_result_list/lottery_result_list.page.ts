@@ -21,7 +21,7 @@ export class LotteryResultListPage implements OnInit {
   lotterySchedules: { [key: number]: LotterySchedule } = {};
   lotteryOptions: { [key: number]: LotteryOption } = {};
   searchQuery = '';
-  isLoading = false; // Variable de carga
+  isLoading = false;
 
   constructor(
     private router: Router,
@@ -30,7 +30,7 @@ export class LotteryResultListPage implements OnInit {
     private lotteryService: LotteryService,
     private lotteryScheduleService: LotteryScheduleService,
     private lotteryOptionService: LotteryOptionService,
-    private loadingController: LoadingController // Importamos LoadingController
+    private loadingController: LoadingController
   ) {}
 
   async ngOnInit() {
