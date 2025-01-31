@@ -6,6 +6,7 @@ import { ClientService } from '../../services/client.service';
 import { LotteryService } from '../../services/lottery.service';
 import { LotteryScheduleService } from '../../services/lottery_schedule.service';
 import { LotteryOptionService } from '../../services/lottery_option.service';
+import { LotteryMultiplierService } from '../../services/lottery_multiplier.service';
 import { AlertController, ModalController } from '@ionic/angular';
 import { Ticket } from '../../interfaces/ticket.interface';
 import { Bet } from '../../interfaces/bet.interface';
@@ -31,7 +32,9 @@ export class PosPage implements OnInit {
     amount: 0,
     date: new Date().toISOString().split('T')[0],
     status: 'pending',
-    created_at: new Date().toISOString()
+    created_at: new Date().toISOString(),
+    type: '',
+    multiplier: 0
   };
 
   constructor(
@@ -42,6 +45,7 @@ export class PosPage implements OnInit {
     private lotteryService: LotteryService,
     private lotteryScheduleService: LotteryScheduleService,
     private lotteryOptionService: LotteryOptionService,
+    private lotteryMultiplierService: LotteryMultiplierService,
     private alertController: AlertController,
     private modalController: ModalController
   ) {
@@ -73,9 +77,23 @@ export class PosPage implements OnInit {
     this.bet.option_id = 0;
   }
 
-  addBet() {
-    if (!this.bet.lottery_id || !this.bet.schedule_id || !this.bet.option_id || this.bet.amount <= 0) return;
+  async selectOption() {
+    console.log(this.bet);
+    if (!this.bet.option_id) return;
 
+    const selectedOption = this.options.find(o => o.id === this.bet.option_id);
+    if (!selectedOption) return;
+
+    this.bet.type = selectedOption.type;
+    console.log(this.bet);
+
+    const multipliers = await this.lotteryMultiplierService.getLotteryMultipliersByLotteryId(this.bet.lottery_id);
+    const matchingMultiplier = multipliers.find(m => m.type === this.bet.type);
+
+    this.bet.multiplier = matchingMultiplier ? matchingMultiplier.multiplier : 1;
+  }
+
+  addBet() {
     const selectedLottery = this.lotteries.find(l => l.id === this.bet.lottery_id);
     const selectedSchedule = this.schedules.find(s => s.id === this.bet.schedule_id);
     const selectedOption = this.options.find(o => o.id === this.bet.option_id);
@@ -95,7 +113,9 @@ export class PosPage implements OnInit {
       amount: 0,
       date: new Date().toISOString().split('T')[0],
       status: 'pending',
-      created_at: new Date().toISOString()
+      created_at: new Date().toISOString(),
+      type: '',
+      multiplier: 0
     };
   }
 
@@ -130,14 +150,16 @@ export class PosPage implements OnInit {
       amount: bet.value.amount,
       date: bet.value.date,
       status: bet.value.status,
-      created_at: bet.value.created_at
+      created_at: bet.value.created_at,
+      type: bet.value.type,
+      multiplier: bet.value.multiplier
     }));
 
     const ticket: Ticket = {
       client_id: this.ticketForm.value.client.id,
       total_amount: this.calculateTotal(),
       status: 'pending',
-      created_at: new Date().toISOString()
+      created_at: new Date().toISOString(),
     };
 
     await this.ticketService.addTicket(ticket, cleanedBets);

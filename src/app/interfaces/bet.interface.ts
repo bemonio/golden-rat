@@ -7,5 +7,7 @@ export interface Bet {
   amount: number;
   date: string;
   status: 'pending' | 'winner' | 'loser';
+  type: string;
+  multiplier: number;
   created_at?: string;
 }

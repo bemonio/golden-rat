@@ -12,7 +12,7 @@
   <form *ngIf="mode === 'edit'" [formGroup]="betForm">
     <ion-item>
       <ion-label position="stacked">Ticket</ion-label>
-      <ion-select formControlName="ticket_id">
+      <ion-select formControlName="ticket_id" interface="popover">
         <ion-select-option *ngFor="let ticket of tickets" [value]="ticket.id">
           Ticket #{{ ticket.id }}
         </ion-select-option>
@@ -21,7 +21,7 @@
 
     <ion-item>
       <ion-label position="stacked">Lotería</ion-label>
-      <ion-select formControlName="lottery_id" (ionChange)="onLotteryChange()">
+      <ion-select formControlName="lottery_id" (ionChange)="onLotteryChange()" interface="popover">
         <ion-select-option *ngFor="let lottery of lotteries" [value]="lottery.id">
           {{ lottery.name }}
         </ion-select-option>
@@ -38,7 +38,7 @@
 
     <ion-item>
       <ion-label position="stacked">Horario</ion-label>
-      <ion-select formControlName="schedule_id">
+      <ion-select formControlName="schedule_id" interface="popover">
         <ion-select-option *ngFor="let schedule of schedules" [value]="schedule.id">
           {{ schedule.time | formatTime }}
         </ion-select-option>
@@ -47,7 +47,7 @@
 
     <ion-item>
       <ion-label position="stacked">Opción</ion-label>
-      <ion-select formControlName="option_id">
+      <ion-select formControlName="option_id" interface="popover">
         <ion-select-option *ngFor="let option of options" [value]="option.id">
           {{ option.name }}
         </ion-select-option>
@@ -61,11 +61,25 @@
 
     <ion-item>
       <ion-label position="stacked">Estado</ion-label>
-      <ion-select formControlName="status">
+      <ion-select formControlName="status" interface="popover">
         <ion-select-option value="pending">Pendiente</ion-select-option>
         <ion-select-option value="winner">Ganador</ion-select-option>
         <ion-select-option value="loser">Perdedor</ion-select-option>
       </ion-select>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="stacked">Tipo de Apuesta</ion-label>
+      <ion-select formControlName="type" interface="popover">
+        <ion-select-option value="animal">Animal</ion-select-option>
+        <ion-select-option value="triple">Triple</ion-select-option>
+        <ion-select-option value="terminal">Terminal</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="stacked">Multiplicador</ion-label>
+      <ion-input formControlName="multiplier" type="number"></ion-input>
     </ion-item>
   </form>
 

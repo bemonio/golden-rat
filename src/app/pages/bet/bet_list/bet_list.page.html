@@ -25,6 +25,8 @@
         {{ bet.date | date:'dd-MM-yyyy'}} -
         {{ getScheduleTime(bet.schedule_id) | formatTime }} -
         {{ bet.amount | currency }} -
+        {{ bet.type }} -
+        {{ bet.multiplier }}x -
         [{{ bet.status | statusTranslate }}]
       </ion-label>
       <ion-buttons slot="end">
