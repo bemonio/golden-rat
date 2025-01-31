@@ -20,7 +20,7 @@
     <form *ngIf="mode === 'edit'" [formGroup]="lotteryResultForm">
       <ion-item>
         <ion-label position="stacked">Lotería</ion-label>
-        <ion-select formControlName="lottery_id">
+        <ion-select formControlName="lottery_id" interface="popover">
           <ion-select-option *ngFor="let lottery of lotteries" [value]="lottery.id">
             {{ lottery.name }}
           </ion-select-option>
@@ -37,7 +37,7 @@
 
       <ion-item>
         <ion-label position="stacked">Horario</ion-label>
-        <ion-select formControlName="lottery_schedule_id">
+        <ion-select formControlName="lottery_schedule_id" interface="popover">
           <ion-select-option *ngFor="let schedule of lotterySchedules" [value]="schedule.id">
             {{ schedule.time | formatTime }}
           </ion-select-option>
@@ -46,7 +46,7 @@
 
       <ion-item>
         <ion-label position="stacked">Resultado</ion-label>
-        <ion-select formControlName="lottery_option_id">
+        <ion-select formControlName="lottery_option_id" interface="popover">
           <ion-select-option *ngFor="let option of lotteryOptions" [value]="option.id">
             {{ option.name }}
           </ion-select-option>

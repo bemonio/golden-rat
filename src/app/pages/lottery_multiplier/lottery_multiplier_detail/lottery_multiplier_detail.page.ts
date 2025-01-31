@@ -17,7 +17,7 @@ export class LotteryMultiplierDetailPage implements OnInit {
   multiplier: LotteryMultiplier = {
     id: 0,
     lottery_id: 0,
-    type: 'animalito',
+    type: 'animal',
     multiplier: 1
   };
 
@@ -34,7 +34,7 @@ export class LotteryMultiplierDetailPage implements OnInit {
   ) {
     this.multiplierForm = this.fb.group({
       lottery_id: [null, [Validators.required]],
-      type: ['animalito', [Validators.required]],
+      type: ['animal', [Validators.required]],
       multiplier: [1, [Validators.required, Validators.min(1)]],
     });
   }

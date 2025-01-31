@@ -18,7 +18,7 @@
     <form [formGroup]="lotteryScheduleForm" *ngIf="mode === 'edit'">
       <ion-item>
         <ion-label>Lotería</ion-label>
-        <ion-select formControlName="lotteryId">
+        <ion-select formControlName="lotteryId" interface="popover">
           <ion-select-option *ngFor="let lottery of lotteries" [value]="lottery.id">
             {{ lottery.name }}
           </ion-select-option>
@@ -27,7 +27,7 @@
 
       <ion-item>
         <ion-label>Día de la Semana</ion-label>
-        <ion-select formControlName="dayOfWeek">
+        <ion-select formControlName="dayOfWeek" interface="popover">
           <ion-select-option value="Monday">Lunes</ion-select-option>
           <ion-select-option value="Tuesday">Martes</ion-select-option>
           <ion-select-option value="Wednesday">Miércoles</ion-select-option>

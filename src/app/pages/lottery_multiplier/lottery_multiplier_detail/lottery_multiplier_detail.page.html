@@ -20,7 +20,7 @@
     <form *ngIf="mode === 'edit'" [formGroup]="multiplierForm">
       <ion-item>
         <ion-label position="stacked">Lotería</ion-label>
-        <ion-select formControlName="lottery_id">
+        <ion-select formControlName="lottery_id" interface="popover">
           <ion-select-option *ngFor="let lottery of lotteries" [value]="lottery.id">
             {{ lottery.name }}
           </ion-select-option>
@@ -29,8 +29,8 @@
 
       <ion-item>
         <ion-label position="stacked">Tipo de Apuesta</ion-label>
-        <ion-select formControlName="type">
-          <ion-select-option value="animalito">Animalito</ion-select-option>
+        <ion-select formControlName="type" interface="popover">
+          <ion-select-option value="animal">Animal</ion-select-option>
           <ion-select-option value="triple">Triple</ion-select-option>
           <ion-select-option value="terminal">Terminal</ion-select-option>
         </ion-select>

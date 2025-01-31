@@ -55,22 +55,22 @@ export class LotteryDetailPage implements OnInit {
       alert('Por favor, completa todos los campos correctamente.');
       return;
     }
-  
+
     const lotteryData = this.lotteryForm.value;
-  
+
     if (this.lotteryId) {
       await this.lotteryService.updateLottery({ id: this.lotteryId, ...lotteryData });
     } else {
       const createdLottery = await this.lotteryService.addLottery(lotteryData);
-  
+
       if (createdLottery.id !== undefined) {
         this.lotteryId = createdLottery.id;
-  
+
         const optionsWithLotteryId = this.options.map(option => ({
           ...option,
           lotteryId: this.lotteryId,
         }));
-  
+
         await this.lotteryOptionService.addMultipleOptions(this.lotteryId, optionsWithLotteryId);
       } else {
         console.error('El objeto creado no contiene un ID.');
@@ -78,9 +78,9 @@ export class LotteryDetailPage implements OnInit {
         return;
       }
     }
-  
+
     this.router.navigate(['/lottery']);
-  }  
+  }
   
   async addLotteryOption() {
     if (!this.newOption.name) {
@@ -117,13 +117,13 @@ export class LotteryDetailPage implements OnInit {
         },
       ],
     });
-  
+
     await alert.present();
   }
 
-  onTypeChange(type: '2 digits' | '3 digits' | 'animal') {
+  onTypeChange(type: 'terminal' | 'triple' | 'animal') {
     if (this.mode === 'edit' && !this.lotteryId) {
       this.options = this.lotteryOptionService.generateOptions(type, this.lotteryId);
     }
-  }  
+  }
 }

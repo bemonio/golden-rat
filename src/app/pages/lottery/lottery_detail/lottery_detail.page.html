@@ -25,10 +25,10 @@
 
     <ion-item>
       <ion-label position="stacked">Tipo</ion-label>
-      <ion-select formControlName="type" (ionChange)="onTypeChange($event.detail.value)">
-      <ion-select-option value="2 digits">"2 Números"</ion-select-option>
-        <ion-select-option value="3 digits">3 Números</ion-select-option>
-        <ion-select-option value="animal">Animalitos</ion-select-option>
+      <ion-select formControlName="type" (ionChange)="onTypeChange($event.detail.value)" interface="popover">
+      <ion-select-option value="terminal">Terminal</ion-select-option>
+        <ion-select-option value="triple">Triple</ion-select-option>
+        <ion-select-option value="animal">Animal</ion-select-option>
       </ion-select>
     </ion-item>
     <div *ngIf="lotteryForm.get('type')?.touched && lotteryForm.get('type')?.invalid">

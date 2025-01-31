@@ -42,15 +42,15 @@ export class LotteryOptionService {
       await this.addLotteryOption({ ...option, lotteryId });
     }
   }
-  
-  generateOptions(type: '2 digits' | '3 digits' | 'animal', lotteryId: number): LotteryOption[] {
-    if (type === '2 digits' || type === '3 digits') {
-      const max = type === '2 digits' ? 99 : 999;
+
+  generateOptions(type: 'terminal' | 'triple' | 'animal', lotteryId: number): LotteryOption[] {
+    if (type === 'terminal' || type === 'triple') {
+      const max = type === 'terminal' ? 99 : 999;
       const options: LotteryOption[] = [];
       for (let i = 0; i <= max; i++) {
         options.push({
           lotteryId: lotteryId,
-          name: i.toString().padStart(type === '2 digits' ? 2 : 3, '0'),
+          name: i.toString().padStart(type === 'terminal' ? 2 : 3, '0'),
           type: type
         });
       }
@@ -65,5 +65,5 @@ export class LotteryOptionService {
     } else {
       throw new Error(`Tipo no soportado: ${type}`);
     }
-  }  
+  }
 }
