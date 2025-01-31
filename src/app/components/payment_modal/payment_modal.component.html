@@ -26,8 +26,12 @@
   <div class="summary">
     <h2>Vuelto: {{ change | currency }}</h2>
   </div>
-
-  <ion-button expand="full" color="success" [disabled]="!paymentForm.valid" (click)="confirmPayment()">
-    Generar Ticket
-  </ion-button>
 </ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-button expand="full" color="success" [disabled]="!paymentForm.valid" (click)="confirmPayment()">
+      Generar Ticket
+    </ion-button>
+  </ion-toolbar>
+</ion-footer>
