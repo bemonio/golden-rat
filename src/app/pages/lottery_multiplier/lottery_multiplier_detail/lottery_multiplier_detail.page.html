@@ -1,0 +1,59 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+      <ion-back-button defaultHref="/lottery_multiplier"></ion-back-button>
+    </ion-buttons>
+    <ion-title>
+      {{ mode === 'view' ? 'Ver Multiplicador' : mode === 'edit' ? 'Editar Multiplicador' : 'Agregar Multiplicador' }}
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ng-container *ngIf="isLoading; else content">
+    <ion-spinner name="crescent"></ion-spinner>
+    <p>Cargando...</p>
+  </ng-container>
+
+  <ng-template #content>
+    <form *ngIf="mode === 'edit'" [formGroup]="multiplierForm">
+      <ion-item>
+        <ion-label position="stacked">Lotería</ion-label>
+        <ion-select formControlName="lottery_id">
+          <ion-select-option *ngFor="let lottery of lotteries" [value]="lottery.id">
+            {{ lottery.name }}
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="stacked">Tipo de Apuesta</ion-label>
+        <ion-select formControlName="type">
+          <ion-select-option value="animalito">Animalito</ion-select-option>
+          <ion-select-option value="triple">Triple</ion-select-option>
+          <ion-select-option value="terminal">Terminal</ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="stacked">Multiplicador</ion-label>
+        <ion-input type="number" formControlName="multiplier"></ion-input>
+      </ion-item>
+    </form>
+
+    <div *ngIf="mode === 'view' && multiplier">
+      <p><strong>Lotería:</strong> {{ getLotteryName(multiplier.lottery_id) }}</p>
+      <p><strong>Tipo de Apuesta:</strong> {{ multiplier.type }}</p>
+      <p><strong>Multiplicador:</strong> {{ multiplier.multiplier }}x</p>
+    </div>
+  </ng-template>
+</ion-content>
+
+<ion-footer *ngIf="mode === 'edit'">
+  <ion-toolbar>
+    <ion-button expand="block" (click)="saveMultiplier()" [disabled]="multiplierForm.invalid">
+      Guardar
+    </ion-button>
+  </ion-toolbar>
+</ion-footer>

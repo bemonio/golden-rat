@@ -27,7 +27,7 @@ export class DataService {
         throw new Error('Failed to create SQLite connection');
       }
     } else {
-      this.db = await openDB('golden-rat-db', 1, {
+      this.db = await openDB('golden-rat-db', 2, {
         upgrade(db) {
           if (!db.objectStoreNames.contains('settings')) {
             db.createObjectStore('settings', { keyPath: 'id', autoIncrement: true });
@@ -37,6 +37,9 @@ export class DataService {
           }
           if (!db.objectStoreNames.contains('lotteries')) {
             db.createObjectStore('lotteries', { keyPath: 'id', autoIncrement: true });
+          }
+          if (!db.objectStoreNames.contains('lottery_multipliers')) {
+            db.createObjectStore('lottery_multipliers', { keyPath: 'id', autoIncrement: true });
           }
           if (!db.objectStoreNames.contains('lottery_options')) {
             db.createObjectStore('lottery_options', { keyPath: 'id', autoIncrement: true });
@@ -89,6 +92,15 @@ export class DataService {
           name TEXT NOT NULL,
           description TEXT,
           payout_multiplier REAL,
+          FOREIGN KEY (lottery_id) REFERENCES lotteries(id) ON DELETE CASCADE
+        );
+        `,
+        `
+        CREATE TABLE IF NOT EXISTS lottery_multipliers (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          lottery_id INTEGER NOT NULL,
+          type TEXT NOT NULL,
+          multiplier REAL NOT NULL,
           FOREIGN KEY (lottery_id) REFERENCES lotteries(id) ON DELETE CASCADE
         );
         `,

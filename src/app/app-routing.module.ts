@@ -51,6 +51,12 @@ const routes: Routes = [
     canActivate: [AuthGuard],
   },
   {
+    path: 'lottery_multiplier',
+    loadChildren: () =>
+      import('./pages/lottery_multiplier/lottery_multiplier.module').then((m) => m.LotteryMultiplierModule),
+    canActivate: [AuthGuard],
+  },
+  {
     path: 'lottery_schedule',
     loadChildren: () =>
       import('./pages/lottery_schedule/lottery_schedule.module').then((m) => m.LotteryScheduleModule),

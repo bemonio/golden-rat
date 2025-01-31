@@ -37,14 +37,19 @@
         <ion-label>Loterías</ion-label>
       </ion-item>
 
+      <ion-item routerLink="/lottery_multiplier" routerDirection="root" (click)="closeMenu()">
+        <ion-icon name="calculator-outline" slot="start"></ion-icon>
+        <ion-label>Multiplicadores</ion-label>
+      </ion-item>
+
       <ion-item routerLink="/lottery_schedule" routerDirection="root" (click)="closeMenu()">
         <ion-icon name="time-outline" slot="start"></ion-icon>
-        <ion-label>Horarios de Lotería</ion-label>
+        <ion-label>Horarios</ion-label>
       </ion-item>
 
       <ion-item routerLink="/lottery_result" routerDirection="root" (click)="closeMenu()">
         <ion-icon name="trophy-outline" slot="start"></ion-icon>
-        <ion-label>Resultados Lotería</ion-label>
+        <ion-label>Resultados</ion-label>
       </ion-item>
 
       <ion-item routerLink="/settings" routerDirection="forward" (click)="closeMenu()">
