@@ -22,7 +22,9 @@
       <ion-label>
         {{ clients[ticket.client_id].name }} -
         {{ ticket.total_amount | currency }} -
-        [{{ ticket.status | statusTranslate }}]
+        [{{ ticket.status | statusTranslate }}] -
+        {{ ticket.payout_amount | currency }} -
+        {{ ticket.is_paid | paymentStatus }}
       </ion-label>
       <ion-buttons slot="end">
         <ion-button (click)="viewTicket(ticket.id)">

@@ -50,7 +50,7 @@ export class BetDetailPage implements OnInit {
       date: [null, [Validators.required]],
       status: ['pending'],
       type: [null, [Validators.required]],
-      multiplier: [1, [Validators.required, Validators.min(1)]]
+      multiplier: [1, [Validators.required, Validators.min(1)]],
     });
   }
 
@@ -65,7 +65,9 @@ export class BetDetailPage implements OnInit {
       status: 'pending',
       created_at: new Date().toISOString(),
       type: '',
-      multiplier: 0
+      multiplier: 0,
+      payout_amount: 0,
+      is_paid: false
     };
 
     this.tickets = await this.ticketService.getAllTickets();

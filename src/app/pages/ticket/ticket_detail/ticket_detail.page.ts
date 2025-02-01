@@ -47,6 +47,8 @@ export class TicketDetailPage implements OnInit {
       client_id: [null, [Validators.required]],
       total_amount: [0, [Validators.required, Validators.min(1)]],
       status: ['pending'],
+      payout_amount: [0, [Validators.required, Validators.min(0)]],
+      is_paid: [false, [Validators.required]]
     });
   }
 
@@ -142,6 +144,7 @@ export class TicketDetailPage implements OnInit {
           return;
         }
       }
+      await this.markWinningBetsAsPaid();
 
       this.router.navigate(['/ticket']);
     } catch (error) {
@@ -160,5 +163,25 @@ export class TicketDetailPage implements OnInit {
 
   getOptionName(id: number): string {
     return this.lotteryOptions[id]?.name || 'N/A';
+  }
+
+  async markWinningBetsAsPaid() {
+    if (!this.ticket) return;
+
+    try {
+      const ticketId = this.ticket?.id ?? 0;
+      const ticketBets = await this.betService.getBetsByTicketId(ticketId);
+
+      const winningBets = ticketBets.filter(bet => bet.status === 'winner');
+
+      for (const bet of winningBets) {
+        bet.is_paid = true;
+        await this.betService.updateBet(bet);
+      }
+
+      console.log(`Apuestas ganadoras del Ticket #${this.ticket.id} han sido marcadas como pagadas.`);
+    } catch (error) {
+      console.error('Error al actualizar apuestas ganadoras:', error);
+    }
   }
 }

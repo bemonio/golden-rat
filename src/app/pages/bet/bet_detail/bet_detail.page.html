@@ -10,6 +10,14 @@
 
 <ion-content>
   <form *ngIf="mode === 'edit'" [formGroup]="betForm">
+    <ion-item (click)="openDatePicker()">
+      <ion-label position="stacked">Fecha</ion-label>
+      <ion-input readonly [value]="bet?.date"></ion-input>
+      <ion-button fill="clear" slot="end">
+        <ion-icon name="calendar-outline" size="large"></ion-icon>
+      </ion-button>
+    </ion-item>
+
     <ion-item>
       <ion-label position="stacked">Ticket</ion-label>
       <ion-select formControlName="ticket_id" interface="popover">
@@ -26,14 +34,6 @@
           {{ lottery.name }}
         </ion-select-option>
       </ion-select>
-    </ion-item>
-
-    <ion-item (click)="openDatePicker()">
-      <ion-label position="stacked">Fecha</ion-label>
-      <ion-input readonly [value]="bet?.date"></ion-input>
-      <ion-button fill="clear" slot="end">
-        <ion-icon name="calendar-outline" size="large"></ion-icon>
-      </ion-button>
     </ion-item>
 
     <ion-item>
@@ -63,6 +63,7 @@
       <ion-label position="stacked">Estado</ion-label>
       <ion-select formControlName="status" interface="popover">
         <ion-select-option value="pending">Pendiente</ion-select-option>
+        <ion-select-option value="partial_winner">Ganador Parcial</ion-select-option>
         <ion-select-option value="winner">Ganador</ion-select-option>
         <ion-select-option value="loser">Perdedor</ion-select-option>
       </ion-select>
@@ -81,17 +82,59 @@
       <ion-label position="stacked">Multiplicador</ion-label>
       <ion-input formControlName="multiplier" type="number"></ion-input>
     </ion-item>
+
+    <ion-item>
+      <ion-label position="stacked">Monto Pagar</ion-label>
+      <ion-input formControlName="payout_amount" type="number"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="stacked">Pagado</ion-label>
+      <ion-select formControlName="is_paid" interface="popover">
+        <ion-select-option [value]="false">No Pagado</ion-select-option>
+        <ion-select-option [value]="true">Pagado</ion-select-option>
+      </ion-select>
+    </ion-item>
   </form>
 
-  <div *ngIf="mode === 'view' && bet">
-    <p><strong>Ticket:</strong> #{{ bet.ticket_id }}</p>
-    <p><strong>Lotería:</strong> {{ getLotteryName(bet.lottery_id) }}</p>
-    <p><strong>Fecha:</strong> {{ bet.date | date:'dd-MM-yyyy' }}</p>
-    <p><strong>Horario:</strong> {{ getScheduleTime(bet.schedule_id) }}</p>
-    <p><strong>Opción:</strong> {{ getOptionName(bet.option_id) }}</p>
-    <p><strong>Monto:</strong> {{ bet.amount | currency }}</p>
-    <p><strong>Estado:</strong> {{ bet.status }}</p>
-  </div>
+  <ion-grid *ngIf="mode === 'view' && bet">
+    <ion-row>
+      <ion-col size="4" class="label">Ticket:</ion-col>
+      <ion-col size="8">#{{ bet.ticket_id }}</ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="4" class="label">Lotería:</ion-col>
+      <ion-col size="8">{{ getLotteryName(bet.lottery_id) }}</ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="4" class="label">Fecha:</ion-col>
+      <ion-col size="8">{{ bet.date | date:'dd-MM-yyyy' }}</ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="4" class="label">Horario:</ion-col>
+      <ion-col size="8">{{ getScheduleTime(bet.schedule_id) }}</ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="4" class="label">Opción:</ion-col>
+      <ion-col size="8">{{ getOptionName(bet.option_id) }}</ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="4" class="label">Monto:</ion-col>
+      <ion-col size="8">{{ bet.amount | currency }}</ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="4" class="label">Estado:</ion-col>
+      <ion-col size="8">{{ bet.status | statusTranslate }}</ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="4" class="label">Monto Pagar:</ion-col>
+      <ion-col size="8">{{ bet.payout_amount | currency }}</ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="4" class="label">Pagado:</ion-col>
+      <ion-col size="8">{{ bet.is_paid | paymentStatus }}</ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>
 
 <ion-footer *ngIf="mode === 'edit'">

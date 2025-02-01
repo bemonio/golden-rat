@@ -9,5 +9,7 @@ export interface Bet {
   status: 'pending' | 'winner' | 'loser';
   type: string;
   multiplier: number;
+  payout_amount: number;
+  is_paid: boolean;
   created_at?: string;
 }

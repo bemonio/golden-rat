@@ -27,7 +27,9 @@
         {{ bet.amount | currency }} -
         {{ bet.type }} -
         {{ bet.multiplier }}x -
-        [{{ bet.status | statusTranslate }}]
+        [{{ bet.status | statusTranslate }}] -
+        {{ bet.payout_amount | currency }} -
+        {{ bet.pis_paid | paymentStatus }}
       </ion-label>
       <ion-buttons slot="end">
         <ion-button (click)="viewBet(bet.id)">

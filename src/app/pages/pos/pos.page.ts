@@ -34,7 +34,9 @@ export class PosPage implements OnInit {
     status: 'pending',
     created_at: new Date().toISOString(),
     type: '',
-    multiplier: 0
+    multiplier: 0,
+    payout_amount: 0,
+    is_paid: false
   };
 
   constructor(
@@ -115,7 +117,9 @@ export class PosPage implements OnInit {
       status: 'pending',
       created_at: new Date().toISOString(),
       type: '',
-      multiplier: 0
+      multiplier: 0,
+      payout_amount: 0,
+      is_paid: false
     };
   }
 
@@ -152,14 +156,18 @@ export class PosPage implements OnInit {
       status: bet.value.status,
       created_at: bet.value.created_at,
       type: bet.value.type,
-      multiplier: bet.value.multiplier
+      multiplier: bet.value.multiplier,
+      payout_amount: 0,
+      is_paid: false
     }));
 
     const ticket: Ticket = {
       client_id: this.ticketForm.value.client.id,
       total_amount: this.calculateTotal(),
       status: 'pending',
-      created_at: new Date().toISOString(),
+      payout_amount: 0,
+      is_paid: false,
+      created_at: new Date().toISOString()
     };
 
     await this.ticketService.addTicket(ticket, cleanedBets);
