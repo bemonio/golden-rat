@@ -139,4 +139,24 @@ export class LotteryResultDetailPage implements OnInit {
       this.lotteryResultForm.patchValue({ date: data.date });
     }
   }
+
+  async onLotteryChange() {
+    const selectedLotteryId = this.lotteryResultForm.get('lottery_id')?.value;
+
+    if (!selectedLotteryId) {
+      this.lotterySchedules = [];
+      this.lotteryOptions = [];
+      this.lotteryResultForm.patchValue({ lottery_schedule_id: null, lottery_option_id: null });
+      return;
+    }
+
+    try {
+      this.lotterySchedules = await this.scheduleService.getLotterySchedulesByLotteryId(selectedLotteryId);
+      this.lotteryOptions = await this.optionService.getLotteryOptionsByLotteryId(selectedLotteryId);
+
+      this.lotteryResultForm.patchValue({ lottery_schedule_id: null, lottery_option_id: null });
+    } catch (error) {
+      console.error('Error al cargar horarios y opciones:', error);
+    }
+  }
 }
