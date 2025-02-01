@@ -12,7 +12,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content class="ion-padding">
   <form [formGroup]="lotteryForm" *ngIf="mode === 'edit'">
     <ion-item>
       <ion-label position="stacked">Nombre</ion-label>
@@ -88,6 +88,6 @@
 
 <ion-footer *ngIf="mode === 'edit'">
   <ion-toolbar>
-    <ion-button expand="block" (click)="saveLottery()" [disabled]="lotteryForm.invalid">Guardar</ion-button>
+    <ion-button expand="full" (click)="saveLottery()" [disabled]="lotteryForm.invalid">Guardar</ion-button>
   </ion-toolbar>
 </ion-footer>

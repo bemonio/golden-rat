@@ -8,7 +8,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content class="ion-padding">
   <form *ngIf="mode === 'edit'" [formGroup]="betForm">
     <ion-item (click)="openDatePicker()">
       <ion-label position="stacked">Fecha</ion-label>
@@ -139,6 +139,6 @@
 
 <ion-footer *ngIf="mode === 'edit'">
   <ion-toolbar>
-    <ion-button expand="block" (click)="saveBet()" [disabled]="betForm.invalid">Guardar</ion-button>
+    <ion-button expand="full" (click)="saveBet()" [disabled]="betForm.invalid">Guardar</ion-button>
   </ion-toolbar>
 </ion-footer>

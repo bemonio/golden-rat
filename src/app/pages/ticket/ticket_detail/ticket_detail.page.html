@@ -8,7 +8,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content class="ion-padding">
   <ion-spinner *ngIf="isLoading" name="crescent"></ion-spinner>
   <p *ngIf="isLoading">Cargando...</p>
 
@@ -113,6 +113,6 @@
 
 <ion-footer *ngIf="!isLoading && mode === 'edit'">
   <ion-toolbar>
-    <ion-button expand="block" (click)="saveTicket()" [disabled]="ticketForm.invalid">Guardar</ion-button>
+    <ion-button expand="full" (click)="saveTicket()" [disabled]="ticketForm.invalid">Guardar</ion-button>
   </ion-toolbar>
 </ion-footer>

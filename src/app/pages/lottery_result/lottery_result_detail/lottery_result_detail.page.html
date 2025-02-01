@@ -10,7 +10,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content class="ion-padding">
   <ng-container *ngIf="isLoading; else content">
     <ion-spinner name="crescent"></ion-spinner>
     <p>Cargando...</p>
@@ -77,7 +77,7 @@
 
 <ion-footer *ngIf="mode === 'edit'">
   <ion-toolbar>
-    <ion-button expand="block" (click)="saveLotteryResult()" [disabled]="lotteryResultForm.invalid">
+    <ion-button expand="full" (click)="saveLotteryResult()" [disabled]="lotteryResultForm.invalid">
       Guardar
     </ion-button>
   </ion-toolbar>
