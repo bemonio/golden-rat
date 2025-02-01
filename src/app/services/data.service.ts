@@ -27,7 +27,7 @@ export class DataService {
         throw new Error('Failed to create SQLite connection');
       }
     } else {
-      this.db = await openDB('golden-rat-db', 3, {
+      this.db = await openDB('golden-rat-db', 1, {
         upgrade(db) {
           if (!db.objectStoreNames.contains('settings')) {
             db.createObjectStore('settings', { keyPath: 'id', autoIncrement: true });
@@ -138,6 +138,8 @@ export class DataService {
           status TEXT DEFAULT 'pending', -- 'pending', 'winner', 'loser'
           type TEXT NOT NULL,
           multiplier REAL NOT NULL,
+          payout_amount REAL DEFAULT 0,
+          is_paid BOOLEAN DEFAULT 0,
           created_at TEXT DEFAULT CURRENT_TIMESTAMP,
           FOREIGN KEY (lottery_id) REFERENCES lotteries(id) ON DELETE CASCADE,
           FOREIGN KEY (lottery_schedule_id) REFERENCES lottery_schedules(id) ON DELETE CASCADE,
@@ -150,6 +152,8 @@ export class DataService {
           client_id INTEGER NOT NULL,
           total_amount REAL NOT NULL,
           status TEXT DEFAULT 'pending', -- 'pending', 'winner', 'loser'
+          payout_amount REAL DEFAULT 0,
+          is_paid BOOLEAN DEFAULT 0,
           created_at TEXT DEFAULT CURRENT_TIMESTAMP,
           FOREIGN KEY (client_id) REFERENCES clients(id) ON DELETE CASCADE
         );
