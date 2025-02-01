@@ -1,16 +1,16 @@
 <ion-header>
     <ion-toolbar>
         <ion-buttons slot="start">
-            <ion-back-button defaultHref="/"></ion-back-button>
+            <ion-menu-button></ion-menu-button>
         </ion-buttons>
-        <ion-title>Reports</ion-title>
+        <ion-title>Reportes</ion-title>
     </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding">
     <ion-grid>
         <ion-row>
-            <ion-col size="6" *ngFor="let report of reports">
+            <ion-col size="12" *ngFor="let report of reports">
                 <ion-card routerLink="{{ report.route }}">
                     <ion-card-header>
                         <ion-icon [name]="report.icon" size="large"></ion-icon>

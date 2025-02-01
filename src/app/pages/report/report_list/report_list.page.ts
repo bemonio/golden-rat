@@ -7,9 +7,10 @@ import { Component } from '@angular/core';
 })
 export class ReportPage {
   reports = [
-    { title: 'Sales', icon: 'stats-chart-outline', route: '/report/sales' },
-    { title: 'Most Played Lotteries', icon: 'layers-outline', route: '/report/lotteries' },
-    { title: 'Frequent Customers', icon: 'people-outline', route: '/report/customers' },
-    { title: 'Frequent Results', icon: 'trophy-outline', route: '/report/results' }
+    { title: 'Ventas', icon: 'stats-chart-outline', route: '/report/sales' },
+    { title: 'Loterías Más Jugadas', icon: 'layers-outline', route: '/report/lotteries' },
+    { title: 'Clientes Frecuentes', icon: 'people-outline', route: '/report/customers' },
+    { title: 'Resultados Frecuentes', icon: 'trophy-outline', route: '/report/results' },
+    { title: 'Resumen Financiero', icon: 'cash-outline', route: '/report/financial' }
   ];
 }

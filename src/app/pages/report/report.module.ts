@@ -10,13 +10,15 @@ import { ReportSalesPage } from './report_sales/report_sales.page';
 import { ReportLotteriesPage } from './report_lotteries/report_lotteries.page';
 import { ReportCustomersPage } from './report_customers/report_customers.page';
 import { ReportResultsPage } from './report_results/report_results.page';
+import { ReportFinancialPage } from './report_financial/report_financial.page';
 
 const routes: Routes = [
   { path: '', component: ReportPage },
   { path: 'sales', component: ReportSalesPage },
   { path: 'lotteries', component: ReportLotteriesPage },
   { path: 'customers', component: ReportCustomersPage },
-  { path: 'results', component: ReportResultsPage }
+  { path: 'results', component: ReportResultsPage },
+  { path: 'financial', component: ReportFinancialPage }
 ];
 
 @NgModule({
@@ -25,7 +27,8 @@ const routes: Routes = [
     ReportSalesPage,
     ReportLotteriesPage,
     ReportCustomersPage,
-    ReportResultsPage
+    ReportResultsPage,
+    ReportFinancialPage
   ],
   imports: [
     CommonModule,
