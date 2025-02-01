@@ -252,4 +252,20 @@ export class DataService {
       await (this.db as SQLiteDBConnection).run(insertQuery);
     }
   }
+
+  async deleteDatabase(): Promise<void> {
+    await this.dbReady;
+    if (this.isNative && this.db) {
+      await (this.db as SQLiteDBConnection).close();
+      await (this.db as SQLiteDBConnection).delete();
+      this.db = null;
+      console.log("SQLite DB eliminada correctamente.");
+    } else if (this.db) {
+      const dbName = 'golden-rat-db';
+      indexedDB.deleteDatabase(dbName);
+      console.log("IndexedDB eliminada correctamente.");
+    } else {
+      throw new Error('La base de datos no está inicializada.');
+    }
+  }
 }
