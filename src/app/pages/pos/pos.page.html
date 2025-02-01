@@ -23,6 +23,14 @@
     </ion-item>
   </form>
 
+  <ion-item (click)="openDatePicker()">
+    <ion-label position="stacked">Fecha</ion-label>
+    <ion-input readonly [value]="bet.date"></ion-input>
+    <ion-button fill="clear" slot="end">
+      <ion-icon name="calendar-outline" size="large"></ion-icon>
+    </ion-button>
+  </ion-item>
+
   <ion-item>
     <ion-label position="stacked">Lotería</ion-label>
     <ion-select [(ngModel)]="bet.lottery_id" (ionChange)="selectLottery()" interface="popover">
@@ -30,14 +38,6 @@
         {{ lottery.name }}
       </ion-select-option>
     </ion-select>
-  </ion-item>
-
-  <ion-item (click)="openDatePicker()">
-    <ion-label position="stacked">Fecha</ion-label>
-    <ion-input readonly [value]="bet.date"></ion-input>
-    <ion-button fill="clear" slot="end">
-      <ion-icon name="calendar-outline" size="large"></ion-icon>
-    </ion-button>
   </ion-item>
 
   <ion-item *ngIf="bet.lottery_id">

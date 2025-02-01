@@ -17,7 +17,7 @@
   <ng-template #formContent>
     <form [formGroup]="lotteryScheduleForm" *ngIf="mode === 'edit'">
       <ion-item>
-        <ion-label>Lotería</ion-label>
+        <ion-label position="stacked">Lotería</ion-label>
         <ion-select formControlName="lotteryId" interface="popover">
           <ion-select-option *ngFor="let lottery of lotteries" [value]="lottery.id">
             {{ lottery.name }}
@@ -26,7 +26,7 @@
       </ion-item>
 
       <ion-item>
-        <ion-label>Día de la Semana</ion-label>
+        <ion-label position="stacked">Día de la Semana</ion-label>
         <ion-select formControlName="dayOfWeek" interface="popover">
           <ion-select-option value="Monday">Lunes</ion-select-option>
           <ion-select-option value="Tuesday">Martes</ion-select-option>
@@ -39,7 +39,7 @@
       </ion-item>
 
       <ion-item>
-        <ion-label>Hora</ion-label>
+        <ion-label position="stacked">Hora</ion-label>
         <ion-datetime formControlName="time"
                       presentation="time"
                       display-format="HH:mm"
@@ -48,11 +48,20 @@
       </ion-item>
     </form>
 
-    <div *ngIf="mode === 'view' && lotterySchedule">
-      <p>Lotería: {{ getLotteryName() }}</p>
-      <p>Día de la Semana: {{ lotterySchedule.dayOfWeek }}</p>
-      <p>Hora: {{ lotterySchedule.time | formatTime }}</p>
-    </div>
+    <ion-grid *ngIf="mode === 'view' && lotterySchedule">
+      <ion-row>
+        <ion-col size="4" class="label">Lotería:</ion-col>
+        <ion-col size="8">{{ getLotteryName() }}</ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col size="4" class="label">Día:</ion-col>
+        <ion-col size="8">{{ lotterySchedule.dayOfWeek }}</ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col size="4" class="label">Hora:</ion-col>
+        <ion-col size="8">{{ lotterySchedule.time | formatTime }}</ion-col>
+      </ion-row>
+    </ion-grid>
   </ng-template>
 </ion-content>
 

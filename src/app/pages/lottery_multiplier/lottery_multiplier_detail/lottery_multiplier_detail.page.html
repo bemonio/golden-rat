@@ -42,11 +42,20 @@
       </ion-item>
     </form>
 
-    <div *ngIf="mode === 'view' && multiplier">
-      <p><strong>Lotería:</strong> {{ getLotteryName(multiplier.lottery_id) }}</p>
-      <p><strong>Tipo de Apuesta:</strong> {{ multiplier.type }}</p>
-      <p><strong>Multiplicador:</strong> {{ multiplier.multiplier }}x</p>
-    </div>
+    <ion-grid *ngIf="mode === 'view' && multiplier">
+      <ion-row>
+        <ion-col size="4" class="label">Lotería:</ion-col>
+        <ion-col size="8">{{ getLotteryName(multiplier.lottery_id) }}</ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col size="4" class="label">Tipo de Apuesta:</ion-col>
+        <ion-col size="8">{{ multiplier.type }}</ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col size="4" class="label">Multiplicador:</ion-col>
+        <ion-col size="8">{{ multiplier.multiplier }}x</ion-col>
+      </ion-row>
+    </ion-grid>
   </ng-template>
 </ion-content>
 

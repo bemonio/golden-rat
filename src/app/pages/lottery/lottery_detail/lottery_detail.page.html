@@ -37,9 +37,18 @@
   </form>
 
   <div *ngIf="mode === 'edit'">
-    <ion-title>Opciones de Apuestas</ion-title>
-
     <ion-list>
+      <ion-list-header>
+        <ion-label>Opciones de Apuestas</ion-label>
+      </ion-list-header>
+
+      <ion-item>
+        <ion-input [(ngModel)]="newOption.name" placeholder="Nueva Opción"></ion-input>
+        <ion-button (click)="addLotteryOption()">
+          <ion-icon slot="icon-only" name="add-outline"></ion-icon>
+        </ion-button>
+      </ion-item>
+
       <ion-item *ngFor="let option of options">
         <ion-input [(ngModel)]="option.name" placeholder="Opción"></ion-input>
         <ion-buttons slot="end">
@@ -52,26 +61,29 @@
         </ion-buttons>
       </ion-item>
     </ion-list>
-
-    <ion-item>
-      <ion-input [(ngModel)]="newOption.name" placeholder="Nueva Opción"></ion-input>
-      <ion-button (click)="addLotteryOption()">
-        <ion-icon slot="icon-only" name="add-outline"></ion-icon>
-      </ion-button>
-    </ion-item>
   </div>
 
-  <div *ngIf="mode === 'view'">
-    <p>Nombre: {{ lotteryForm.get('name')?.value }}</p>
-    <p>Tipo: {{ lotteryForm.get('type')?.value }}</p>
-    <ion-list>
-      <ion-item *ngFor="let option of options">
-        <ion-label>
-          {{ option.name }} - {{ option.type }}
-        </ion-label>
-      </ion-item>
-    </ion-list>
-  </div>
+  <ion-grid *ngIf="mode === 'view'">
+    <ion-row>
+      <ion-col size="4" class="label">Nombre:</ion-col>
+      <ion-col size="8">{{ lotteryForm.get('name')?.value }}</ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="4" class="label">Tipo:</ion-col>
+      <ion-col size="8">{{ lotteryForm.get('type')?.value }}</ion-col>
+    </ion-row>
+
+    <ion-row class="section-title">
+      <ion-col size="12">Opciones:</ion-col>
+    </ion-row>
+
+    <ion-grid>
+      <ion-row *ngFor="let option of options">
+        <ion-col size="6">{{ option.name }}</ion-col>
+        <ion-col size="6">{{ option.type }}</ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-grid>
 </ion-content>
 
 <ion-footer *ngIf="mode === 'edit'">

@@ -14,33 +14,32 @@
       <ion-label position="stacked">Nombre</ion-label>
       <ion-input formControlName="name"></ion-input>
     </ion-item>
-    <div *ngIf="clientForm.get('name')?.touched && clientForm.get('name')?.invalid">
-      <p *ngIf="clientForm.get('name')?.hasError('required')">El nombre es obligatorio.</p>
-    </div>
 
     <ion-item>
       <ion-label position="stacked">Alias</ion-label>
       <ion-input formControlName="alias"></ion-input>
     </ion-item>
-    <div *ngIf="clientForm.get('alias')?.touched && clientForm.get('alias')?.invalid">
-      <p *ngIf="clientForm.get('alias')?.hasError('required')">El alias es obligatorio.</p>
-    </div>
 
     <ion-item>
       <ion-label position="stacked">Número de Celular</ion-label>
       <ion-input formControlName="phone" type="tel"></ion-input>
     </ion-item>
-    <div *ngIf="clientForm.get('phone')?.touched && clientForm.get('phone')?.invalid">
-      <p *ngIf="clientForm.get('phone')?.hasError('required')">El número de celular es obligatorio.</p>
-      <p *ngIf="clientForm.get('phone')?.hasError('pattern')">Ingrese un número de celular válido.</p>
-    </div>
   </form>
 
-  <div *ngIf="mode === 'view' && client">
-    <p><strong>Alias:</strong> {{ client.alias }}</p>
-    <p><strong>Nombre:</strong> {{ client.name }}</p>
-    <p><strong>Teléfono:</strong> {{ client.phone }}</p>
-  </div>
+  <ion-grid *ngIf="mode === 'view' && client">
+    <ion-row>
+      <ion-col size="4" class="label">Alias:</ion-col>
+      <ion-col size="8">{{ client.alias }}</ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="4" class="label">Nombre:</ion-col>
+      <ion-col size="8">{{ client.name }}</ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="4" class="label">Teléfono:</ion-col>
+      <ion-col size="8">{{ client.phone }}</ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>
 
 <ion-footer *ngIf="mode === 'edit'">

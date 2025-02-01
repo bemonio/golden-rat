@@ -5,7 +5,7 @@
       <ion-back-button defaultHref="/lottery_result"></ion-back-button>
     </ion-buttons>
     <ion-title>
-      {{ mode === 'view' ? 'Ver Resultado de Lotería' : mode === 'edit' ? 'Editar Resultado de Lotería' : 'Agregar Resultado' }}
+      {{ mode === 'view' ? 'Ver Resultado' : mode === 'edit' ? 'Editar Resultado' : 'Agregar Resultado' }}
     </ion-title>
   </ion-toolbar>
 </ion-header>
@@ -18,15 +18,6 @@
 
   <ng-template #content>
     <form *ngIf="mode === 'edit'" [formGroup]="lotteryResultForm">
-      <ion-item>
-        <ion-label position="stacked">Lotería</ion-label>
-        <ion-select formControlName="lottery_id" interface="popover">
-          <ion-select-option *ngFor="let lottery of lotteries" [value]="lottery.id">
-            {{ lottery.name }}
-          </ion-select-option>
-        </ion-select>
-      </ion-item>
-
       <ion-item (click)="openDatePicker()">
         <ion-label position="stacked">Fecha</ion-label>
         <ion-input readonly formControlName="date"></ion-input>
@@ -36,6 +27,15 @@
       </ion-item>
 
       <ion-item>
+        <ion-label position="stacked">Lotería</ion-label>
+        <ion-select formControlName="lottery_id" interface="popover" (ionChange)="onLotteryChange()">
+          <ion-select-option *ngFor="let lottery of lotteries" [value]="lottery.id">
+            {{ lottery.name }}
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-item *ngIf="lotteryResultForm.get('lottery_id')?.value">
         <ion-label position="stacked">Horario</ion-label>
         <ion-select formControlName="lottery_schedule_id" interface="popover">
           <ion-select-option *ngFor="let schedule of lotterySchedules" [value]="schedule.id">
@@ -44,7 +44,7 @@
         </ion-select>
       </ion-item>
 
-      <ion-item>
+      <ion-item *ngIf="lotteryResultForm.get('lottery_id')?.value">
         <ion-label position="stacked">Resultado</ion-label>
         <ion-select formControlName="lottery_option_id" interface="popover">
           <ion-select-option *ngFor="let option of lotteryOptions" [value]="option.id">
@@ -54,12 +54,24 @@
       </ion-item>
     </form>
 
-    <div *ngIf="mode === 'view' && lotteryResult">
-      <p><strong>Lotería:</strong> {{ getLotteryName(lotteryResult.lottery_id) }}</p>
-      <p><strong>Fecha:</strong> {{ lotteryResult.date | date:'dd-MM-yyyy' }}</p>
-      <p><strong>Horario:</strong> {{ getScheduleTime(lotteryResult.lottery_schedule_id) | formatTime }}</p>
-      <p><strong>Resultado:</strong> {{ getOptionName(lotteryResult.lottery_option_id) }}</p>
-    </div>
+    <ion-grid *ngIf="mode === 'view' && lotteryResult">
+      <ion-row>
+        <ion-col size="4" class="label">Lotería:</ion-col>
+        <ion-col size="8">{{ getLotteryName(lotteryResult.lottery_id) }}</ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col size="4" class="label">Fecha:</ion-col>
+        <ion-col size="8">{{ lotteryResult.date | date:'dd-MM-yyyy' }}</ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col size="4" class="label">Horario:</ion-col>
+        <ion-col size="8">{{ getScheduleTime(lotteryResult.lottery_schedule_id) | formatTime }}</ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col size="4" class="label">Resultado:</ion-col>
+        <ion-col size="8">{{ getOptionName(lotteryResult.lottery_option_id) }}</ion-col>
+      </ion-row>
+    </ion-grid>
   </ng-template>
 </ion-content>
 
