@@ -56,7 +56,46 @@ export class LotteryOptionService {
       }
       return options;
     } else if (type === 'animal') {
-      const animals = ['Tigre', 'Elefante', 'León'];
+      const animals =[
+        'Ballena',
+        'Carnero',
+        'Toro',
+        'Ciempies',
+        'Alacrán',
+        'León',
+        'Rana',
+        'Perico',
+        'Ratón',
+        'Águila',
+        'Tigre',
+        'Gato',
+        'Caballo',
+        'Mono',
+        'Paloma',
+        'Zorro',
+        'Oso',
+        'Pavo',
+        'Burro',
+        'Chivo',
+        'Cochino',
+        'Gallo',
+        'Camello',
+        'Cebra',
+        'Iguana',
+        'Gallina',
+        'Vaca',
+        'Perro',
+        'Zamuro',
+        'Elefante',
+        'Caimán',
+        'Lapa',
+        'Ardilla',
+        'Pescado',
+        'Venado',
+        'Jirafa',
+        'Culebra'
+      ];
+
       return animals.map((animal) => ({
         lotteryId: lotteryId,
         name: animal,
