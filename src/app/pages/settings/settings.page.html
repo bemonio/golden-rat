@@ -23,6 +23,13 @@
   </ng-template>
 
   <ion-item>
+    <ion-label>Generar Datos Demo</ion-label>
+    <ion-button color="primary" (click)="generateDemoData()">
+      <ion-icon slot="icon-only" name="flask-outline"></ion-icon>
+    </ion-button>
+  </ion-item>
+
+  <ion-item>
     <ion-label>Eliminar Base de Datos</ion-label>
     <ion-button color="danger" (click)="confirmDeleteDatabase()">
       <ion-icon slot="icon-only" name="trash-outline"></ion-icon>

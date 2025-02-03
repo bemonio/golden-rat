@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AlertController, ToastController } from '@ionic/angular';
 import { SettingsService } from '../../services/settings.service';
 import { DataService } from '../../services/data.service';
+import { DemoService } from 'src/app/services/demo.service';
 
 @Component({
   selector: 'app-config',
@@ -16,6 +17,7 @@ export class SettingsPage {
   constructor(
     private settingsService: SettingsService,
     private dataService: DataService,
+    private demoService: DemoService,
     private fb: FormBuilder,
     private alertController: AlertController,
     private toastController: ToastController
@@ -77,6 +79,26 @@ export class SettingsPage {
     });
 
     await alert.present();
+  }
+
+  async generateDemoData() {
+    try {
+      await this.demoService.generateDemoData();
+      const toast = await this.toastController.create({
+        message: 'Datos demo generados exitosamente.',
+        duration: 2000,
+        color: 'success',
+      });
+      await toast.present();
+    } catch (error) {
+      console.error('Error al generar datos demo:', error);
+      const toast = await this.toastController.create({
+        message: 'Error al generar los datos demo.',
+        duration: 2000,
+        color: 'danger',
+      });
+      await toast.present();
+    }
   }
 
   async deleteDatabase() {
