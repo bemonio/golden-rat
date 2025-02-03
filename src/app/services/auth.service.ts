@@ -25,6 +25,7 @@ export class AuthService {
   }
 
   async logout(): Promise<void> {
+    localStorage.removeItem('authUser');
     await this.auth0Client.logout({
       logoutParams: { returnTo: environment.auth0.callbackUrl + '/login' }
     });
