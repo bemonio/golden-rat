@@ -7,6 +7,7 @@ import { Component } from '@angular/core';
 })
 export class ReportPage {
   reports = [
+    { title: 'Pagos Pendientes', icon: 'alert-circle-outline', route: '/report/pending_payments' },
     { title: 'Ventas', icon: 'stats-chart-outline', route: '/report/sales' },
     { title: 'Loterías Más Jugadas', icon: 'layers-outline', route: '/report/lotteries' },
     { title: 'Clientes Frecuentes', icon: 'people-outline', route: '/report/customers' },

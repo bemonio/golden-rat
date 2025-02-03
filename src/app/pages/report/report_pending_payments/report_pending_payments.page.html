@@ -1,0 +1,29 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-back-button defaultHref="/report"></ion-back-button>
+        </ion-buttons>
+        <ion-title>Pagos Pendientes</ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+    <ion-list>
+        <ion-list-header>
+            <ion-label>Tickets Pendientes</ion-label>
+        </ion-list-header>
+
+        <ion-item *ngFor="let ticket of pendingPayments">
+            <ion-label>
+                <p><strong>Cliente:</strong> {{ ticket.client_id }}</p>
+                <p><strong>Fecha:</strong> {{ ticket.created_at | date:'dd-MM-yyyy' }}</p>
+                <p><strong>Monto a Pagar:</strong> {{ ticket.payout_amount | currency }}</p>
+            </ion-label>
+            <ion-buttons slot="end">
+                <ion-button color="success" (click)="markAsPaid(ticket)">
+                    <ion-icon slot="icon-only" name="checkmark-outline"></ion-icon>
+                </ion-button>
+            </ion-buttons>
+        </ion-item>
+    </ion-list>
+</ion-content>

@@ -11,9 +11,11 @@ import { ReportLotteriesPage } from './report_lotteries/report_lotteries.page';
 import { ReportCustomersPage } from './report_customers/report_customers.page';
 import { ReportResultsPage } from './report_results/report_results.page';
 import { ReportFinancialPage } from './report_financial/report_financial.page';
+import { ReportPendingPaymentsPage } from './report_pending_payments/report_pending_payments.page';
 
 const routes: Routes = [
   { path: '', component: ReportPage },
+  { path: 'pending_payments', component: ReportPendingPaymentsPage },
   { path: 'sales', component: ReportSalesPage },
   { path: 'lotteries', component: ReportLotteriesPage },
   { path: 'customers', component: ReportCustomersPage },
@@ -28,7 +30,8 @@ const routes: Routes = [
     ReportLotteriesPage,
     ReportCustomersPage,
     ReportResultsPage,
-    ReportFinancialPage
+    ReportFinancialPage,
+    ReportPendingPaymentsPage
   ],
   imports: [
     CommonModule,
