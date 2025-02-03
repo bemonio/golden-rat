@@ -70,7 +70,27 @@ export class PosPage implements OnInit {
 
   async selectLottery() {
     if (!this.bet.lottery_id) return;
-    this.schedules = await this.lotteryScheduleService.getLotterySchedulesByLotteryId(this.bet.lottery_id);
+
+    const today = new Date();
+    const selectedDate = new Date(this.bet.date);
+    const selectedDayName = selectedDate.toLocaleString('en-US', { weekday: 'long' });
+    const currentTime = today.getHours() * 60 + today.getMinutes();
+
+    const allSchedules = await this.lotteryScheduleService.getLotterySchedulesByLotteryId(this.bet.lottery_id);
+
+    this.schedules = allSchedules.filter(schedule => {
+      if (schedule.dayOfWeek !== selectedDayName) return false;
+
+      const [hours, minutes] = schedule.time.split(':').map(Number);
+      const scheduleTimeInMinutes = hours * 60 + minutes;
+
+      if (selectedDate.toDateString() === today.toDateString()) {
+        return scheduleTimeInMinutes - 5 > currentTime;
+      }
+
+      return true;
+    });
+
     this.bet.schedule_id = 0;
     this.bet.option_id = 0;
   }
@@ -190,9 +210,19 @@ export class PosPage implements OnInit {
   }
 
   async openDatePicker() {
+    const today = new Date();
+    const maxDate = new Date(today);
+    maxDate.setDate(today.getDate() + 2);
+
     const modal = await this.modalController.create({
       component: DatePickerModalComponent,
-      componentProps: { selectedDate: this.bet.date }
+      componentProps: {
+        selectedDate: this.bet.date,
+        minDate: today.toISOString().split('T')[0],
+        maxDate: maxDate.toISOString().split('T')[0],
+        includeMin: true,
+        includeMax: true
+      }
     });
 
     await modal.present();
@@ -200,6 +230,13 @@ export class PosPage implements OnInit {
 
     if (data?.confirmed) {
       this.bet.date = data.date;
+
+      this.bet.lottery_id = 0;
+      this.bet.schedule_id = 0;
+      this.bet.option_id = 0;
+      this.bet.amount = 0;
+      this.schedules = [];
+      this.options = [];
     }
   }
 }

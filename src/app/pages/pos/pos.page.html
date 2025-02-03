@@ -42,11 +42,16 @@
 
   <ion-item *ngIf="bet.lottery_id">
     <ion-label position="stacked">Horario</ion-label>
-    <ion-select [(ngModel)]="bet.schedule_id" (ionChange)="selectSchedule()" interface="popover">
+
+    <ion-select *ngIf="schedules.length > 0" [(ngModel)]="bet.schedule_id" (ionChange)="selectSchedule()" interface="popover">
       <ion-select-option *ngFor="let schedule of schedules" [value]="schedule.id">
         {{ schedule.time | formatTime }}
       </ion-select-option>
     </ion-select>
+
+    <div *ngIf="schedules.length === 0">
+      <p>No hay horarios disponibles para esta fecha.</p>
+    </div>
   </ion-item>
 
   <ion-item *ngIf="bet.schedule_id">
