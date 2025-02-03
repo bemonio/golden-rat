@@ -9,11 +9,14 @@
 
 <ion-content class="ion-padding">
   <ion-item>
-    <ion-datetime [value]="selectedDate"
-                  (ionChange)="confirmDate($event)"
-                  presentation="date"
-                  display-format="YYYY-MM-DD"
-                  picker-format="YYYY-MM-DD">
+    <ion-datetime
+      [value]="selectedDate"
+      (ionChange)="confirmDate($event)"
+      presentation="date"
+      display-format="YYYY-MM-DD"
+      picker-format="YYYY-MM-DD"
+      [min]="minDate ? (includeMin ? minDate : addOneDay(minDate)) : undefined"
+      [max]="maxDate ? (includeMax ? maxDate : subtractOneDay(maxDate)) : undefined">
     </ion-datetime>
   </ion-item>
 

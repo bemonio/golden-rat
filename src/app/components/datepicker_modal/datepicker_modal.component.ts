@@ -8,6 +8,10 @@ import { ModalController } from '@ionic/angular';
 })
 export class DatePickerModalComponent {
   @Input() selectedDate: string = '';
+  @Input() minDate?: string;
+  @Input() maxDate?: string;
+  @Input() includeMin?: boolean = true;
+  @Input() includeMax?: boolean = true;
 
   constructor(private modalController: ModalController) {}
 
@@ -20,5 +24,17 @@ export class DatePickerModalComponent {
       confirmed: confirm,
       date: confirm ? this.selectedDate : null
     });
+  }
+
+  addOneDay(dateString: string): string {
+    const date = new Date(dateString);
+    date.setDate(date.getDate() + 1);
+    return date.toISOString().split('T')[0];
+  }
+
+  subtractOneDay(dateString: string): string {
+    const date = new Date(dateString);
+    date.setDate(date.getDate() - 1);
+    return date.toISOString().split('T')[0];
   }
 }
