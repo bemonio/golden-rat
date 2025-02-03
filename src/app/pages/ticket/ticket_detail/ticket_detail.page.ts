@@ -135,7 +135,7 @@ export class TicketDetailPage implements OnInit {
       if (this.ticketId) {
         await this.ticketService.updateTicket({ id: this.ticketId, ...ticketData });
       } else {
-        const createdTicket = await this.ticketService.addTicket(ticketData, []);
+        const createdTicket = await this.ticketService.addTicket(ticketData);
         if (createdTicket.id !== undefined) {
           this.ticketId = createdTicket.id;
         } else {

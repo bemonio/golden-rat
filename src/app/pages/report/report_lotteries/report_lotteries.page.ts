@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Chart, ChartConfiguration, registerables } from 'chart.js';
 import { TicketService } from '../../../services/ticket.service';
 import { LotteryService } from '../../../services/lottery.service';
+import { BetService } from '../../../services/bet.service';
+import { Bet } from 'src/app/interfaces/bet.interface';
 
 Chart.register(...registerables);
 
@@ -14,7 +16,11 @@ export class ReportLotteriesPage implements OnInit {
   lotteryData: number[] = [];
   lotteryLabels: string[] = [];
 
-  constructor(private ticketService: TicketService, private lotteryService: LotteryService) {}
+  constructor(
+    private ticketService: TicketService,
+    private lotteryService: LotteryService,
+    private betService: BetService,
+  ) {}
 
   async ngOnInit() {
     await this.loadLotteryData();
@@ -25,13 +31,14 @@ export class ReportLotteriesPage implements OnInit {
     const tickets = await this.ticketService.getAllTickets();
     const lotteryCount: { [key: number]: number } = {};
 
-    tickets.forEach(ticket => {
-      ticket.bets?.forEach(bet => {
-        if (!lotteryCount[bet.lottery_id]) {
-          lotteryCount[bet.lottery_id] = 0;
-        }
-        lotteryCount[bet.lottery_id] += 1;
-      });
+    const betPromises = tickets.map(ticket => this.betService.getBetsByTicketId(ticket.id!));
+    const allBets: Bet[] = (await Promise.all(betPromises)).reduce((acc, bets) => acc.concat(bets), []);
+
+    allBets.forEach(bet => {
+      if (!lotteryCount[bet.lottery_id]) {
+        lotteryCount[bet.lottery_id] = 0;
+      }
+      lotteryCount[bet.lottery_id] += 1;
     });
 
     const lotteries = await this.lotteryService.getAllLotteries();

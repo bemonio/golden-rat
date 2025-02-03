@@ -16,7 +16,7 @@ export class LotteryDetailPage implements OnInit {
   lotteryId: number = 0;
   lotteryForm: FormGroup;
   options: LotteryOption[] = [];
-  newOption: LotteryOption = { lotteryId: 0, name: '', type: ''};
+  newOption: LotteryOption = { lotteryId: 0, name: '', type: 'animal'};
 
   constructor(
     private route: ActivatedRoute,
@@ -90,7 +90,7 @@ export class LotteryDetailPage implements OnInit {
     this.newOption.lotteryId = this.lotteryId;
     await this.lotteryOptionService.addLotteryOption(this.newOption);
     this.options = await this.lotteryOptionService.getLotteryOptionsByLotteryId(this.lotteryId);
-    this.newOption = { lotteryId: 0, name: '', type: ''};
+    this.newOption = { lotteryId: 0, name: '', type: 'animal'};
   }
 
   async updateLotteryOption(option: LotteryOption) {

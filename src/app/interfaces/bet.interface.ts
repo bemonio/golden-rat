@@ -7,7 +7,7 @@ export interface Bet {
   amount: number;
   date: string;
   status: 'pending' | 'winner' | 'loser';
-  type: string;
+  type: 'animal' | 'triple' | 'terminal';
   multiplier: number;
   payout_amount: number;
   is_paid: boolean;

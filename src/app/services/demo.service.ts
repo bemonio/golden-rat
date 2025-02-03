@@ -67,7 +67,7 @@ export class DemoService {
       }
 
       const schedules: LotterySchedule[] = [];
-      const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+      const days: LotterySchedule['dayOfWeek'][] = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
       for (const day of days) {
         const drawsPerDay = day === 'Saturday' ? 1 : 2;
         for (let i = 0; i < drawsPerDay; i++) {
@@ -88,7 +88,7 @@ export class DemoService {
             payout_amount: 0,
             is_paid: false
           };
-          const createdTicket = await this.ticketService.addTicket(ticket, []);
+          const createdTicket = await this.ticketService.addTicket(ticket);
 
           const betsCount = Math.floor(Math.random() * 5) + 1;
           for (let betNum = 0; betNum < betsCount; betNum++) {
@@ -123,7 +123,7 @@ export class DemoService {
           }
         }
       }
-      
+
       for (const result of results) {
         await this.lotteryResultService.addLotteryResult(result);
       }

@@ -67,7 +67,9 @@ export class DataService {
         `
         CREATE TABLE IF NOT EXISTS settings (
           id INTEGER PRIMARY KEY AUTOINCREMENT,
-          max_bet_amount INTEGER NOT NULL
+          max_bet_amount INTEGER NOT NULL,
+          is_active BOOLEAN DEFAULT 1,
+          created_at TEXT DEFAULT CURRENT_TIMESTAMP,
         );
         `,
         `
@@ -76,6 +78,8 @@ export class DataService {
           name TEXT NOT NULL,
           alias TEXT NOT NULL,
           phone TEXT NOT NULL UNIQUE
+          is_active BOOLEAN DEFAULT 1,
+          created_at TEXT DEFAULT CURRENT_TIMESTAMP,
         );
         `,
         `
@@ -83,6 +87,8 @@ export class DataService {
           id INTEGER PRIMARY KEY AUTOINCREMENT,
           name TEXT NOT NULL,
           type TEXT NOT NULL
+          is_active BOOLEAN DEFAULT 1,
+          created_at TEXT DEFAULT CURRENT_TIMESTAMP,
         );
         `,
         `
@@ -92,6 +98,8 @@ export class DataService {
           name TEXT NOT NULL,
           description TEXT,
           payout_multiplier REAL,
+          is_active BOOLEAN DEFAULT 1,
+          created_at TEXT DEFAULT CURRENT_TIMESTAMP,
           FOREIGN KEY (lottery_id) REFERENCES lotteries(id) ON DELETE CASCADE
         );
         `,
@@ -101,6 +109,8 @@ export class DataService {
           lottery_id INTEGER NOT NULL,
           type TEXT NOT NULL,
           multiplier REAL NOT NULL,
+          is_active BOOLEAN DEFAULT 1,
+          created_at TEXT DEFAULT CURRENT_TIMESTAMP,
           FOREIGN KEY (lottery_id) REFERENCES lotteries(id) ON DELETE CASCADE
         );
         `,
@@ -111,6 +121,7 @@ export class DataService {
           day_of_week TEXT NOT NULL,
           time TEXT NOT NULL,
           is_active BOOLEAN DEFAULT 1,
+          created_at TEXT DEFAULT CURRENT_TIMESTAMP,
           FOREIGN KEY (lottery_id) REFERENCES lotteries(id) ON DELETE CASCADE
         );
         `,
@@ -121,6 +132,7 @@ export class DataService {
           lottery_schedule_id INTEGER NOT NULL,
           lottery_option_id INTEGER NOT NULL,
           date TEXT NOT NULL,
+          is_active BOOLEAN DEFAULT 1,
           created_at TEXT DEFAULT CURRENT_TIMESTAMP,
           FOREIGN KEY (lottery_id) REFERENCES lotteries(id) ON DELETE CASCADE
           FOREIGN KEY (lottery_schedule_id) REFERENCES lottery_schedules(id) ON DELETE CASCADE,
@@ -140,6 +152,7 @@ export class DataService {
           multiplier REAL NOT NULL,
           payout_amount REAL DEFAULT 0,
           is_paid BOOLEAN DEFAULT 0,
+          is_active BOOLEAN DEFAULT 1,
           created_at TEXT DEFAULT CURRENT_TIMESTAMP,
           FOREIGN KEY (lottery_id) REFERENCES lotteries(id) ON DELETE CASCADE,
           FOREIGN KEY (lottery_schedule_id) REFERENCES lottery_schedules(id) ON DELETE CASCADE,
@@ -154,6 +167,7 @@ export class DataService {
           status TEXT DEFAULT 'pending', -- 'pending', 'winner', 'loser'
           payout_amount REAL DEFAULT 0,
           is_paid BOOLEAN DEFAULT 0,
+          is_active BOOLEAN DEFAULT 1,
           created_at TEXT DEFAULT CURRENT_TIMESTAMP,
           FOREIGN KEY (client_id) REFERENCES clients(id) ON DELETE CASCADE
         );
@@ -192,6 +206,15 @@ export class DataService {
 
   async add(storeName: string, data: any): Promise<any> {
     await this.dbReady;
+
+    if (!data.created_at) {
+      data.created_at = new Date().toISOString();
+    }
+
+    if (!data.is_active) {
+      data.is_active = 1;
+    }
+
     if (this.isNative && this.db) {
       const keys = Object.keys(data).join(', ');
       const values = Object.values(data);

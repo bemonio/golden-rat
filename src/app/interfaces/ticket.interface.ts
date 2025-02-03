@@ -1,5 +1,3 @@
-import { Bet } from "./bet.interface";
-
 export interface Ticket {
     id?: number;
     client_id: number;
@@ -8,5 +6,4 @@ export interface Ticket {
     payout_amount: number;
     is_paid: boolean;
     created_at?: string;
-    bets?: Bet[];
 }

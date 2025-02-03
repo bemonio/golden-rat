@@ -7,6 +7,7 @@ import { LotteryService } from '../../services/lottery.service';
 import { LotteryScheduleService } from '../../services/lottery_schedule.service';
 import { LotteryOptionService } from '../../services/lottery_option.service';
 import { LotteryMultiplierService } from '../../services/lottery_multiplier.service';
+import { BetService } from '../../services/bet.service';
 import { AlertController, ModalController } from '@ionic/angular';
 import { Ticket } from '../../interfaces/ticket.interface';
 import { Bet } from '../../interfaces/bet.interface';
@@ -33,7 +34,7 @@ export class PosPage implements OnInit {
     date: new Date().toISOString().split('T')[0],
     status: 'pending',
     created_at: new Date().toISOString(),
-    type: '',
+    type: 'animal',
     multiplier: 0,
     payout_amount: 0,
     is_paid: false
@@ -48,6 +49,7 @@ export class PosPage implements OnInit {
     private lotteryScheduleService: LotteryScheduleService,
     private lotteryOptionService: LotteryOptionService,
     private lotteryMultiplierService: LotteryMultiplierService,
+    private betService: BetService,
     private alertController: AlertController,
     private modalController: ModalController
   ) {
@@ -116,7 +118,7 @@ export class PosPage implements OnInit {
       date: new Date().toISOString().split('T')[0],
       status: 'pending',
       created_at: new Date().toISOString(),
-      type: '',
+      type: 'animal',
       multiplier: 0,
       payout_amount: 0,
       is_paid: false
@@ -146,8 +148,19 @@ export class PosPage implements OnInit {
   }
 
   async generateTicket() {
-    const cleanedBets = this.bets.controls.map(bet => ({
-      ticket_id: 0,
+    const ticket: Ticket = {
+      client_id: this.ticketForm.value.client.id,
+      total_amount: this.calculateTotal(),
+      status: 'pending',
+      payout_amount: 0,
+      is_paid: false,
+      created_at: new Date().toISOString()
+    };
+
+    const createdTicket = await this.ticketService.addTicket(ticket);
+
+    const betsToSave = this.bets.controls.map(bet => ({
+      ticket_id: createdTicket.id!,
       lottery_id: bet.value.lottery_id,
       schedule_id: bet.value.schedule_id,
       option_id: bet.value.option_id,
@@ -161,22 +174,16 @@ export class PosPage implements OnInit {
       is_paid: false
     }));
 
-    const ticket: Ticket = {
-      client_id: this.ticketForm.value.client.id,
-      total_amount: this.calculateTotal(),
-      status: 'pending',
-      payout_amount: 0,
-      is_paid: false,
-      created_at: new Date().toISOString()
-    };
+    for (const bet of betsToSave) {
+      await this.betService.addBet(bet);
+    }
 
-    await this.ticketService.addTicket(ticket, cleanedBets);
     this.ticketForm.reset();
     this.bets.clear();
 
     const alert = await this.alertController.create({
       header: 'Venta Registrada',
-      message: 'El ticket ha sido guardado exitosamente.',
+      message: 'El ticket y sus apuestas han sido guardados exitosamente.',
       buttons: ['OK']
     });
     await alert.present();

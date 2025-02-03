@@ -64,7 +64,7 @@ export class BetDetailPage implements OnInit {
       date: new Date().toISOString().split('T')[0],
       status: 'pending',
       created_at: new Date().toISOString(),
-      type: '',
+      type: 'animal',
       multiplier: 0,
       payout_amount: 0,
       is_paid: false

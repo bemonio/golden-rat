@@ -1,7 +1,8 @@
 export interface LotterySchedule {
   id?: number;
   lotteryId: number;
-  dayOfWeek: string;
+  dayOfWeek: 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday' | 'Saturday' | 'Sunday';
   time: string;
   isActive: boolean;
+  created_at?: string;
 }
